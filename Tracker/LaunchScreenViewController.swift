@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  LaunchScreenViewController.swift
 //  Tracker
 //
 //  Created by Sergey Simashov on 01.12.2024.
@@ -7,13 +7,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+final class LaunchScreenViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        view.backgroundColor = .trackerBlue
     }
-
-
 }
-
