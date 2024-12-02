@@ -22,9 +22,11 @@ final class TabBarViewController: UITabBarController {
     
     private func createTabBar() {
         
+        let navigationViewController = UINavigationController(rootViewController: TrackersViewController())
+        
         viewControllers = [
             createTabBarItem(
-                viewController: TrackersViewController(),
+                viewController: navigationViewController,
                 title: TabBarItem.trackers.rawValue,
                 image: UIImage(named:"trackers")
             ),
