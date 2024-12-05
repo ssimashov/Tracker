@@ -37,6 +37,18 @@ final class TrackersViewController: UIViewController {
         addTrackerButton.tintColor = .trackerBlack
         navigationItem.leftBarButtonItem = addTrackerButton
         
+        //Date picker
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .compact
+      
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        datePicker.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        datePicker.locale = Locale(identifier: "ru_RU")
+        datePicker.calendar = Calendar(identifier: .gregorian)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
+        
+        
         // Title
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -52,7 +64,6 @@ final class TrackersViewController: UIViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
         searchController.searchBar.placeholder = "Поиск"
-        
         
         //PlaceHolder Logo
         let placeholderLogo = UIImageView()
