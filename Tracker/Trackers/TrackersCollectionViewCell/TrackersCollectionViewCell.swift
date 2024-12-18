@@ -155,10 +155,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     private func setupCompleteButton(isChecked: Bool) {
         if isChecked == true {
-            completeButton.setImage(UIImage(resource: .done).withTintColor(.white), for: .normal)
+            completeButton.setImage(UIImage(resource: .done).withTintColor(.trackerWhite), for: .normal)
             completeButton.backgroundColor = completeButton.backgroundColor?.withAlphaComponent(0.3)
         } else {
-            completeButton.setImage(UIImage(systemName: "roundPlus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 14)), for: .normal)
+            completeButton.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 14)), for: .normal)
             completeButton.backgroundColor = completeButton.backgroundColor?.withAlphaComponent(1)
         }
     }

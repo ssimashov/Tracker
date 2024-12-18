@@ -1,10 +1,3 @@
-//
-//  TrackersViewController.swift
-//  Tracker
-//
-//  Created by Sergey Simashov on 01.12.2024.
-//
-
 import UIKit
 
 struct GeometricParams {
@@ -92,12 +85,12 @@ final class TrackersViewController: UIViewController {
         calendar.locale = Locale(identifier: "ru_RU")
         setupNavigationItemBackButton()
         setupNavigationItem()
+        setupTitleLabel()
         setupPlaceHolderView()
         setupTrackersCollectionView()
     }
     
     private func setupNavigationItem() {
-        navigationItem.title = "Трекеры"
 
         navigationItem.searchController = searchController
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
@@ -115,10 +108,11 @@ final class TrackersViewController: UIViewController {
         datePicker.locale = Locale(identifier: "ru_RU")
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        datePicker.widthAnchor.constraint(equalToConstant: 97).isActive = true
     }
     
     
-    private func filterCategoryByDate(categories: [TrackerCategory], by date: Date) -> [TrackerCategory] {
+    private func filterCategorybyDate(categories: [TrackerCategory], by date: Date) -> [TrackerCategory] {
         let weekday = calendar.component(.weekday, from: date) - 1
 
         let filteredCategories = categories
@@ -176,13 +170,23 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateFilters(date: Date, searchText: String) {
-        filteredCategories = filterCategoryByDate(categories: categories, by: date)
+        filteredCategories = filterCategorybyDate(categories: categories, by: date)
         searchFilteredCategories = filterCategorybyTitle(categories: filteredCategories, by: searchText)
     }
     
+    private func setupTitleLabel() {
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "Трекеры"
+        titleLabel.font = .systemFont(ofSize: 34, weight: .bold)
+        titleLabel.textColor = .trackerBlack
+        view.addSubview(titleLabel)
+        titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+    }
     private func setupPlaceHolderView() {
-        let placeHolderImage = UIImage(named: "placeHolderLogo")
-        placeHolderImageView.image = placeHolderImage
+        let placeHolderImage = UIImage(resource: .placeHolderLogo)
+       placeHolderImageView.image = placeHolderImage
         
         placeHolderLabel.text = "Что будем отслеживать?"
         placeHolderLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
@@ -194,7 +198,7 @@ final class TrackersViewController: UIViewController {
         placeHolderView.addSubview(placeHolderImageView)
         placeHolderView.addSubview(placeHolderLabel)
         
-        placeHolderImageView.translatesAutoresizingMaskIntoConstraints = false
+    placeHolderImageView.translatesAutoresizingMaskIntoConstraints = false
         placeHolderLabel.translatesAutoresizingMaskIntoConstraints = false
         placeHolderView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -207,9 +211,9 @@ final class TrackersViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            placeHolderImageView.widthAnchor.constraint(equalToConstant: 80),
-            placeHolderImageView.heightAnchor.constraint(equalToConstant: 80),
-            placeHolderImageView.centerXAnchor.constraint(equalTo: placeHolderView.centerXAnchor)
+                    placeHolderImageView.widthAnchor.constraint(equalToConstant: 80),
+                    placeHolderImageView.heightAnchor.constraint(equalToConstant: 80),
+                    placeHolderImageView.centerXAnchor.constraint(equalTo: placeHolderView.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -220,17 +224,17 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupNavigationItemBackButton() {
-        let addTrackerButton = UIBarButtonItem(image: UIImage(named: "plus"),
+        let backButton = UIBarButtonItem(image: UIImage(resource: .plus),
                                          style: .plain,
                                          target: self,
                                          action: #selector(didTapAddTrackerButton))
-        addTrackerButton.tintColor = UIColor(resource: .trackerBlack)
-        navigationItem.leftBarButtonItem = addTrackerButton
+        backButton.tintColor = UIColor(resource: .trackerBlack)
+        navigationItem.leftBarButtonItem = backButton
     }
     
     private func setupTrackersCollectionView() {
         trackersCollectionView.register(TrackersCollectionViewCell.self, forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier)
-        trackersCollectionView.register(TrackersCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackersCollectionViewHeader.identifier)
+        trackersCollectionView.register(TrackersCollectionSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackersCollectionSupplementaryView.identifier)
         
         trackersCollectionView.isHidden = true
         
@@ -251,7 +255,13 @@ final class TrackersViewController: UIViewController {
     
     @objc
     private func didTapAddTrackerButton() {
-        
+        let trackerTypeSelectionViewController = TrackerTypeSelectionViewController()
+        trackerTypeSelectionViewController.delegate = self
+        let addEventNavigationontroller = UINavigationController(rootViewController: trackerTypeSelectionViewController)
+        navigationController?.present(addEventNavigationontroller, animated: true)
+        addEventNavigationontroller.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium)]
+
+
     }
     
     @objc
@@ -301,12 +311,12 @@ extension TrackersViewController: UICollectionViewDataSource {
         var id: String
         switch kind {
         case UICollectionView.elementKindSectionHeader:
-            id = TrackersCollectionViewHeader.identifier
+            id = TrackersCollectionSupplementaryView.identifier
         default:
             id = ""
         }
         
-        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionViewHeader
+        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionSupplementaryView
         else {
             return UICollectionReusableView()
         }
@@ -325,6 +335,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         
         let availableWidth = collectionView.frame.width - sectionParams.paddingWidth
         let cellWidth =  availableWidth / CGFloat(sectionParams.cellCount)
+        
         return CGSize(width: cellWidth,
                       height: 148)
     }
@@ -340,16 +351,33 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return sectionParams.cellSpacing
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        
-        let indexPath = IndexPath(row: 0, section: section)
-        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
-        
-        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
-                                                         height: UIView.layoutFittingExpandedSize.height),
-                                                         withHorizontalFittingPriority: .required,
-                                                         verticalFittingPriority: .fittingSizeLevel)
+//    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        
+//        let indexPath = IndexPath(row: 0, section: section)
+//        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+//        
+//        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
+//                                                         height: UIView.layoutFittingExpandedSize.height),
+//                                                         withHorizontalFittingPriority: .required,
+//                                                         verticalFittingPriority: .fittingSizeLevel)
+//    }
+}
+
+extension TrackersViewController: TrackerTypeSelectionViewControllerDelegate {
+    func createTracker(_ tracker: Tracker, _ category: String) {
+        if categories.map({$0.title}).contains(category) == false {
+            categories.append(TrackerCategory(title: category, trackers: [tracker]))
+        }
+        else if let index = categories.firstIndex(where: {$0.title == category}) {
+            var trackers: [Tracker] = categories[index].trackers
+            trackers.append(tracker)
+            categories[index] = TrackerCategory(title: categories[index].title, trackers: trackers)
+        }
+                
+        updateFilters(date: currentDate, searchText: searchController.searchBar.text ?? "")
+        trackersCollectionView.reloadData()
+        updatePlaceHolderViewVisibility()
     }
 }
 

@@ -7,35 +7,37 @@
 
 import UIKit
 
-final class TrackersCollectionViewHeader: UICollectionReusableView {
-    static let identifier = "Header"
-    
-    private var titleLabel = UILabel()
-    
+final class TrackersCollectionSupplementaryView: UICollectionReusableView {
     var categoryTitle: String = String() {
         didSet {
             titleLabel.text = categoryTitle
         }
     }
     
+    static let identifier = "TrackersCollectionHeader"
+    
+    private let titleLabel = UILabel()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        setupView()
+        setupTitleLabel()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupView() {
-        titleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
-        titleLabel.textColor = .trackerBlack
+    private func setupTitleLabel() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        titleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
+        titleLabel.textAlignment = .left
+
         addSubview(titleLabel)
         
-        titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
-        titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
     }
 }
