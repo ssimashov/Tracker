@@ -27,8 +27,8 @@ final class ScheduleTableViewCell: UITableViewCell {
         }
     }
     
-    private let titleLabel = UILabel()
-    private let switcher = UISwitch()
+    private lazy var titleLabel = UILabel()
+    private lazy var switcher = UISwitch()
     
     required init?(coder: NSCoder) {fatalError("init(coder:) has not been implemented")}
 

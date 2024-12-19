@@ -19,11 +19,9 @@ final class ScheduleViewController: UIViewController {
     private let weekdays = Array(Weekday.allCases[1..<Weekday.allCases.count] + Weekday.allCases[0..<1])
     var schedule: [(weekday: Weekday, isChecked: Bool)] = []
     
-    private let scheduleTableView = UITableView(frame: .zero, style: .plain)
-    private let completeButton = UIButton()
+    private lazy var scheduleTableView = UITableView(frame: .zero, style: .plain)
+    private lazy var completeButton = UIButton()
 
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .trackerWhite

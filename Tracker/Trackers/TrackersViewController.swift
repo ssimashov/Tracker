@@ -30,7 +30,7 @@ enum Weekday: Int, CaseIterable {
     case thursday
     case friday
     case saturday
-
+    
     var fullname: String {
         var calendar = Calendar.current
         calendar.locale = Locale(identifier: "ru_RU")
@@ -59,21 +59,21 @@ final class TrackersViewController: UIViewController {
     }
     
     private var currentDate = Date()
-    private let placeHolderView = UIView()
-    private let placeHolderImageView = UIImageView()
-    private let placeHolderLabel = UILabel()
-    private let searchController = UISearchController(searchResultsController: nil)
-    private let titleLabel = UILabel()
-    private let datePicker = UIDatePicker()
-    private let trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private lazy var placeHolderView = UIView()
+    private lazy var placeHolderImageView = UIImageView()
+    private lazy var placeHolderLabel = UILabel()
+    private lazy var searchController = UISearchController(searchResultsController: nil)
+    private lazy var titleLabel = UILabel()
+    private lazy var datePicker = UIDatePicker()
+    private lazy var trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     private let sectionParams = GeometricParams(cellCount: 2,
-                                 leftInset: 16,
-                                 rightInset: 16,
-                                 topInset: 12,
-                                 bottomInset: 16,
-                                 cellSpacing: 9,
-                                 lineSpacing: 0
+                                                leftInset: 16,
+                                                rightInset: 16,
+                                                topInset: 12,
+                                                bottomInset: 16,
+                                                cellSpacing: 9,
+                                                lineSpacing: 0
     )
     
     private var calendar = Calendar(identifier: .gregorian)
@@ -91,7 +91,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupNavigationItem() {
-
+        
         navigationItem.searchController = searchController
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         navigationController?.modalPresentationStyle = .formSheet
@@ -105,7 +105,7 @@ final class TrackersViewController: UIViewController {
         searchController.searchBar.delegate = self
         
         datePicker.datePickerMode = .date
-        datePicker.locale = Locale(identifier: "ru_RU")
+//        datePicker.locale = Locale(identifier: "ru_RU")
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         datePicker.widthAnchor.constraint(equalToConstant: 97).isActive = true
@@ -114,7 +114,7 @@ final class TrackersViewController: UIViewController {
     
     private func filterCategorybyDate(categories: [TrackerCategory], by date: Date) -> [TrackerCategory] {
         let weekday = calendar.component(.weekday, from: date) - 1
-
+        
         let filteredCategories = categories
             .filter { category in
                 category.trackers.contains { tracker in
@@ -125,8 +125,8 @@ final class TrackersViewController: UIViewController {
         let filteredTrackersinCategories = filteredCategories.map { category in
             let trackers = category.trackers.filter { tracker in
                 tracker.schedule.contains(where: {$0.rawValue == weekday})
-                    || isNonregularTrackerNotComplete(tracker)
-                    || isNonregularTrackerComplete(tracker, at: date)
+                || isNonregularTrackerNotComplete(tracker)
+                || isNonregularTrackerComplete(tracker, at: date)
             }
             return TrackerCategory(title: category.title, trackers: trackers)
         }
@@ -143,7 +143,7 @@ final class TrackersViewController: UIViewController {
                     tracker.title.lowercased().contains(substring.lowercased())
                 }
             }
-                
+        
         let filteredTrackersinCategories = filteredCategories.map { category in
             let trackers = category.trackers.filter { tracker in
                 tracker.title.lowercased().contains(substring.lowercased())
@@ -186,7 +186,7 @@ final class TrackersViewController: UIViewController {
     }
     private func setupPlaceHolderView() {
         let placeHolderImage = UIImage(resource: .placeHolderLogo)
-       placeHolderImageView.image = placeHolderImage
+        placeHolderImageView.image = placeHolderImage
         
         placeHolderLabel.text = "Что будем отслеживать?"
         placeHolderLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
@@ -198,7 +198,7 @@ final class TrackersViewController: UIViewController {
         placeHolderView.addSubview(placeHolderImageView)
         placeHolderView.addSubview(placeHolderLabel)
         
-    placeHolderImageView.translatesAutoresizingMaskIntoConstraints = false
+        placeHolderImageView.translatesAutoresizingMaskIntoConstraints = false
         placeHolderLabel.translatesAutoresizingMaskIntoConstraints = false
         placeHolderView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -211,9 +211,9 @@ final class TrackersViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-                    placeHolderImageView.widthAnchor.constraint(equalToConstant: 80),
-                    placeHolderImageView.heightAnchor.constraint(equalToConstant: 80),
-                    placeHolderImageView.centerXAnchor.constraint(equalTo: placeHolderView.centerXAnchor)
+            placeHolderImageView.widthAnchor.constraint(equalToConstant: 80),
+            placeHolderImageView.heightAnchor.constraint(equalToConstant: 80),
+            placeHolderImageView.centerXAnchor.constraint(equalTo: placeHolderView.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -260,8 +260,8 @@ final class TrackersViewController: UIViewController {
         let addEventNavigationontroller = UINavigationController(rootViewController: trackerTypeSelectionViewController)
         navigationController?.present(addEventNavigationontroller, animated: true)
         addEventNavigationontroller.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium)]
-
-
+        
+        
     }
     
     @objc
@@ -272,7 +272,7 @@ final class TrackersViewController: UIViewController {
         updateFilters(date: currentDate, searchText: searchController.searchBar.text ?? "")
         trackersCollectionView.reloadData()
         updatePlaceHolderViewVisibility()
-
+        
     }
 }
 
@@ -303,7 +303,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.isChecked = completedTrackers.contains(where: {$0.id == cell.tracker?.id && calendar.isDate($0.date, inSameDayAs: currentDate)})
         cell.checkCounter = completedTrackers.count(where: {$0.id == cell.tracker?.id})
         cell.date = currentDate
-
+        
         return cell
     }
     
@@ -351,17 +351,17 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return sectionParams.cellSpacing
     }
-//    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        
-//        let indexPath = IndexPath(row: 0, section: section)
-//        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
-//        
-//        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
-//                                                         height: UIView.layoutFittingExpandedSize.height),
-//                                                         withHorizontalFittingPriority: .required,
-//                                                         verticalFittingPriority: .fittingSizeLevel)
-//    }
+    //    
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    //        
+    //        let indexPath = IndexPath(row: 0, section: section)
+    //        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+    //        
+    //        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
+    //                                                         height: UIView.layoutFittingExpandedSize.height),
+    //                                                         withHorizontalFittingPriority: .required,
+    //                                                         verticalFittingPriority: .fittingSizeLevel)
+    //    }
 }
 
 extension TrackersViewController: TrackerTypeSelectionViewControllerDelegate {
@@ -374,7 +374,7 @@ extension TrackersViewController: TrackerTypeSelectionViewControllerDelegate {
             trackers.append(tracker)
             categories[index] = TrackerCategory(title: categories[index].title, trackers: trackers)
         }
-                
+        
         updateFilters(date: currentDate, searchText: searchController.searchBar.text ?? "")
         trackersCollectionView.reloadData()
         updatePlaceHolderViewVisibility()
@@ -399,7 +399,7 @@ extension TrackersViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
-
+    
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
     }

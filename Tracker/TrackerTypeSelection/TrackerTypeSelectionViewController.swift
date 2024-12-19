@@ -14,10 +14,10 @@ protocol TrackerTypeSelectionViewControllerDelegate: AnyObject {
 final class TrackerTypeSelectionViewController: UIViewController {
     weak var delegate: TrackerTypeSelectionViewControllerDelegate?
     
-    private let habitButton = UIButton()
-    private let nonregularEventButton = UIButton()
-    private let buttonsView = UIView()
-    private let buttonsStackView = UIStackView()
+    private lazy var habitButton = UIButton()
+    private lazy var nonregularEventButton = UIButton()
+    private lazy var buttonsView = UIView()
+    private lazy var buttonsStackView = UIStackView()
     
     override func viewDidLoad() {
         super.viewDidLoad()

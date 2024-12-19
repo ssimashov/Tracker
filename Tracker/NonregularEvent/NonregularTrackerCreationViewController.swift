@@ -10,13 +10,13 @@ import UIKit
 final class NonreglarTrackerCreationViewController: UIViewController {
     weak var delegate: TrackerCreationViewControllerDelegate?
     
-    private let cancelButton = UIButton()
-    private let addButton = UIButton()
-    private let buttonsStackView = UIStackView()
-    private let trackerNameTextField = UITextField()
-    private let trackerNameLengthErrorLabel = UILabel()
-    private let trackerNameStackView = UIStackView()
-    private let trackerCreationTableView = UITableView()
+    private lazy var cancelButton = UIButton()
+    private lazy var addButton = UIButton()
+    private lazy var buttonsStackView = UIStackView()
+    private lazy var trackerNameTextField = UITextField()
+    private lazy var trackerNameLengthErrorLabel = UILabel()
+    private lazy var trackerNameStackView = UIStackView()
+    private lazy var trackerCreationTableView = UITableView()
     
     private let trackerCategory = "Нерегулярная категория"
     private var schedule: [Weekday] = []

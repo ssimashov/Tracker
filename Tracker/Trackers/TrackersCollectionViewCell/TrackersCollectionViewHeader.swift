@@ -16,7 +16,7 @@ final class TrackersCollectionSupplementaryView: UICollectionReusableView {
     
     static let identifier = "TrackersCollectionHeader"
     
-    private let titleLabel = UILabel()
+    private lazy var titleLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -56,11 +56,11 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    private let cardView = UIView()
-    private let trakerTitleLabel =  UILabel()
-    private let emojiLabel = UILabel()
-    private let completeCounterLabel = UILabel()
-    private let completeButton = UIButton()
+    private lazy var cardView = UIView()
+    private lazy var trakerTitleLabel =  UILabel()
+    private lazy var emojiLabel = UILabel()
+    private lazy var completeCounterLabel = UILabel()
+    private lazy var completeButton = UIButton()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -74,6 +74,9 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         } else {
             completeButton.isEnabled = true
             completeButton.alpha = 1
+        
+//        completeButton.isEnabled = !state
+//        completeButton.alpha = state ? 0.3 : 1
         }
     }
     

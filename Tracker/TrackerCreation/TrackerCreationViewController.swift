@@ -14,15 +14,15 @@ protocol TrackerCreationViewControllerDelegate: AnyObject {
 final class TrackerCreationViewController: UIViewController {
     weak var delegate: TrackerCreationViewControllerDelegate?
     
-    private let trackerNameTextField = UITextField()
-    private let trackerNameLengthErrorLabel = UILabel()
-    private let trackerNameStackView = UIStackView()
+    private lazy var trackerNameTextField = UITextField()
+    private lazy var trackerNameLengthErrorLabel = UILabel()
+    private lazy var trackerNameStackView = UIStackView()
     
-    private let cancelButton = UIButton()
-    private let addButton = UIButton()
-    private let buttonsStackView = UIStackView()
+    private lazy var cancelButton = UIButton()
+    private lazy var addButton = UIButton()
+    private lazy var buttonsStackView = UIStackView()
     
-    private let trackerCreationTableView = UITableView()
+    private lazy var trackerCreationTableView = UITableView()
     
     private let trackerCategory = "Привычная категория"
     private let weekdays = Array(Weekday.allCases[1..<Weekday.allCases.count] + Weekday.allCases[0..<1])

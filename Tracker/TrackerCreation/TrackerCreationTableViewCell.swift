@@ -8,13 +8,13 @@
 import UIKit
 
 final class TrackerCreationTableViewCell: UITableViewCell {
-    var trackerParameterName: String = String() {
+    var trackerParameterName: String = "" {
         didSet {
             titleLabel.text = trackerParameterName
         }
     }
     
-    var trackerParameterDescription: String = String() {
+    var trackerParameterDescription: String = "" {
         didSet {
             subtitleLabel.text = trackerParameterDescription
             subtitleLabel.isHidden = subtitleLabel.text?.isEmpty ?? true
@@ -23,11 +23,11 @@ final class TrackerCreationTableViewCell: UITableViewCell {
     
     static let identifier = "TrackerCreationCell"
     
-    private let titleLabel = UILabel()
-    private let subtitleLabel = UILabel()
-    private let cellImageView = UIImageView()
-    private let cellStackView = UIStackView()
-    private let labelsStackView = UIStackView()
+    private lazy var titleLabel = UILabel()
+    private lazy var subtitleLabel = UILabel()
+    private lazy var cellImageView = UIImageView()
+    private lazy var cellStackView = UIStackView()
+    private lazy var labelsStackView = UIStackView()
 
     required init?(coder: NSCoder) {fatalError("init(coder:) has not been implemented")}
 
