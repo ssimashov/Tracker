@@ -15,13 +15,13 @@ protocol ScheduleViewControllerDelegate: AnyObject {
 
 final class ScheduleViewController: UIViewController {
     weak var delegate: ScheduleViewControllerDelegate?
-
+    
     private let weekdays = Array(Weekday.allCases[1..<Weekday.allCases.count] + Weekday.allCases[0..<1])
     var schedule: [(weekday: Weekday, isChecked: Bool)] = []
     
     private lazy var scheduleTableView = UITableView(frame: .zero, style: .plain)
     private lazy var completeButton = UIButton()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .trackerWhite
@@ -42,7 +42,7 @@ final class ScheduleViewController: UIViewController {
         scheduleTableView.layer.cornerRadius = 16
         scheduleTableView.layer.masksToBounds = true
         scheduleTableView.tableHeaderView = UIView()
-    
+        
         scheduleTableView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(scheduleTableView)

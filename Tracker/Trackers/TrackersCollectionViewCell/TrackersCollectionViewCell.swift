@@ -55,7 +55,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             completeCounterLabel.text = "\(checkCounter) \(suffix)"
         }
     }
-
+    
     private lazy var cardView = UIView()
     private lazy var trakerTitleLabel =  UILabel()
     private lazy var emojiLabel = UILabel()
@@ -74,7 +74,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         } else {
             completeButton.isEnabled = true
             completeButton.alpha = 1
-
+            
         }
     }
     
@@ -103,7 +103,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         completeButton.layer.cornerRadius = 17
         completeButton.clipsToBounds = true
         completeButton.addTarget(self, action: #selector(didTapCompleteButton), for: .touchUpInside)
-
+        
         cardView.translatesAutoresizingMaskIntoConstraints = false
         trakerTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false

@@ -24,7 +24,7 @@ final class NonreglarTrackerCreationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         trackerParameters[0].desc = trackerCategory
         navigationItem.title = "Новое нерегулярное событие"
         navigationItem.hidesBackButton = true
@@ -48,7 +48,7 @@ final class NonreglarTrackerCreationViewController: UIViewController {
         trackerCreationTableView.layer.cornerRadius = 16
         trackerCreationTableView.layer.masksToBounds = true
         trackerCreationTableView.tableHeaderView = UIView()
-
+        
         trackerCreationTableView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(trackerCreationTableView)
@@ -85,7 +85,7 @@ final class NonreglarTrackerCreationViewController: UIViewController {
         )
         trackerNameTextField.layer.cornerRadius = 16.0
         trackerNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-
+        
         trackerNameStackView.translatesAutoresizingMaskIntoConstraints = false
         trackerNameLengthErrorLabel.translatesAutoresizingMaskIntoConstraints = false
         trackerNameTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -119,7 +119,7 @@ final class NonreglarTrackerCreationViewController: UIViewController {
         addButton.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
         addButton.backgroundColor = .trackerGray
         addButton.isEnabled = false
-
+        
         buttonsStackView.spacing = 8
         buttonsStackView.distribution = .fillEqually
         
@@ -172,17 +172,21 @@ final class NonreglarTrackerCreationViewController: UIViewController {
         setupAddButton()
     }
 }
-    
 
 extension NonreglarTrackerCreationViewController: UITextFieldDelegate{
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let maxLength = 38
         let currentString = (textField.text ?? "") as NSString
         let newString = currentString.replacingCharacters(in: range, with: string)
-
+        
         trackerNameLengthErrorLabel.isHidden = newString.count <= maxLength
         
         return newString.count <= maxLength
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 

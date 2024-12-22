@@ -31,7 +31,7 @@ final class TrackersCollectionSupplementaryView: UICollectionReusableView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         titleLabel.textAlignment = .left
-
+        
         addSubview(titleLabel)
         
         NSLayoutConstraint.activate([

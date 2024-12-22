@@ -28,9 +28,9 @@ final class TrackerCreationTableViewCell: UITableViewCell {
     private lazy var cellImageView = UIImageView()
     private lazy var cellStackView = UIStackView()
     private lazy var labelsStackView = UIStackView()
-
+    
     required init?(coder: NSCoder) {fatalError("init(coder:) has not been implemented")}
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .trackerBackground
@@ -48,13 +48,13 @@ final class TrackerCreationTableViewCell: UITableViewCell {
         subtitleLabel.textColor = .trackerGray
         subtitleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         subtitleLabel.isHidden = subtitleLabel.text?.isEmpty ?? true
-
+        
         cellStackView.axis = .horizontal
         cellStackView.distribution = .equalSpacing
         
         labelsStackView.axis = .vertical
         labelsStackView.spacing = 2
-    
+        
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         cellStackView.translatesAutoresizingMaskIntoConstraints = false

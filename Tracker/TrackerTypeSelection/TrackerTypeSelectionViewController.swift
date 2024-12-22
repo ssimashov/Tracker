@@ -51,7 +51,7 @@ final class TrackerTypeSelectionViewController: UIViewController {
         buttonsStackView.addArrangedSubview(habitButton)
         buttonsStackView.addArrangedSubview(nonregularEventButton)
         view.addSubview(buttonsStackView)
-
+        
         NSLayoutConstraint.activate([
             buttonsStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             buttonsStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
@@ -60,15 +60,15 @@ final class TrackerTypeSelectionViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             habitButton.heightAnchor.constraint(equalToConstant: 60),
-
+            
         ])
         
         NSLayoutConstraint.activate([
             nonregularEventButton.heightAnchor.constraint(equalToConstant: 60),
-
+            
         ])
     }
-        
+    
     @objc
     private func didTapHabitButton() {
         let trackerCreationViewController = TrackerCreationViewController()

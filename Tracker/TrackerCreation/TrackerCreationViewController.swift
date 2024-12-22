@@ -123,7 +123,7 @@ final class TrackerCreationViewController: UIViewController {
         addButton.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
         addButton.backgroundColor = .trackerGray
         addButton.isEnabled = false
-
+        
         buttonsStackView.spacing = 8
         buttonsStackView.distribution = .fillEqually
         
@@ -182,13 +182,18 @@ extension TrackerCreationViewController: UITextFieldDelegate{
         let maxLength = 38
         let currentString = (textField.text ?? "") as NSString
         let newString = currentString.replacingCharacters(in: range, with: string)
-
+        
         trackerNameLengthErrorLabel.isHidden = newString.count <= maxLength
         
         return newString.count <= maxLength
     }
-}
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+
 extension TrackerCreationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let scheduleViewController = ScheduleViewController()
@@ -213,7 +218,7 @@ extension TrackerCreationViewController: UITableViewDataSource {
         }
         cell.trackerParameterName = trackerParameters[indexPath.row].name
         cell.trackerParameterDescription = trackerParameters[indexPath.row].desc
-    
+        
         return cell
     }
 }
