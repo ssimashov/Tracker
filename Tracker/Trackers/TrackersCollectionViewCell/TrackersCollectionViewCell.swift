@@ -74,9 +74,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         } else {
             completeButton.isEnabled = true
             completeButton.alpha = 1
-        
-//        completeButton.isEnabled = !state
-//        completeButton.alpha = state ? 0.3 : 1
+
         }
     }
     

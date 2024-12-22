@@ -58,7 +58,7 @@ final class TrackerCreationViewController: UIViewController {
         view.addSubview(trackerCreationTableView)
         
         NSLayoutConstraint.activate([
-            trackerCreationTableView.heightAnchor.constraint(equalToConstant: 150),
+            trackerCreationTableView.heightAnchor.constraint(equalToConstant: 149),
             trackerCreationTableView.topAnchor.constraint(equalTo: trackerNameStackView.bottomAnchor, constant: 24),
             trackerCreationTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             trackerCreationTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
@@ -108,7 +108,7 @@ final class TrackerCreationViewController: UIViewController {
     
     private func setupButtonsStackView() {
         cancelButton.setTitleColor(.trackerRed, for: .normal)
-        cancelButton.setTitle("Отмена", for: .normal)
+        cancelButton.setTitle("Отменить", for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cancelButton.backgroundColor = .trackerWhite
         cancelButton.layer.cornerRadius = 16.0

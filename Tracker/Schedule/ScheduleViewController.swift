@@ -48,7 +48,7 @@ final class ScheduleViewController: UIViewController {
         view.addSubview(scheduleTableView)
         
         NSLayoutConstraint.activate([
-            scheduleTableView.heightAnchor.constraint(equalToConstant: 525),
+            scheduleTableView.heightAnchor.constraint(equalToConstant: 524),
             scheduleTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             scheduleTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             scheduleTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
