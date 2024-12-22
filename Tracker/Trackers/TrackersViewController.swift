@@ -63,7 +63,6 @@ final class TrackersViewController: UIViewController {
     private lazy var placeHolderImageView = UIImageView()
     private lazy var placeHolderLabel = UILabel()
     private lazy var searchController = UISearchController(searchResultsController: nil)
-    private lazy var titleLabel = UILabel()
     private lazy var datePicker = UIDatePicker()
     private lazy var trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -85,27 +84,27 @@ final class TrackersViewController: UIViewController {
         calendar.locale = Locale(identifier: "ru_RU")
         setupNavigationItemBackButton()
         setupNavigationItem()
-        setupTitleLabel()
         setupPlaceHolderView()
         setupTrackersCollectionView()
     }
     
     private func setupNavigationItem() {
-        
+        navigationItem.title = "Трекеры"
         navigationItem.searchController = searchController
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         navigationController?.modalPresentationStyle = .formSheet
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        
         
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
-        searchController.searchBar.searchTextField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         searchController.searchBar.placeholder = "Поиск"
         searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
         searchController.searchBar.searchTextField.clearButtonMode = .never
         searchController.searchBar.delegate = self
         
         datePicker.datePickerMode = .date
-//        datePicker.locale = Locale(identifier: "ru_RU")
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         datePicker.widthAnchor.constraint(equalToConstant: 97).isActive = true
@@ -174,16 +173,6 @@ final class TrackersViewController: UIViewController {
         searchFilteredCategories = filterCategorybyTitle(categories: filteredCategories, by: searchText)
     }
     
-    private func setupTitleLabel() {
-        
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "Трекеры"
-        titleLabel.font = .systemFont(ofSize: 34, weight: .bold)
-        titleLabel.textColor = .trackerBlack
-        view.addSubview(titleLabel)
-        titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-    }
     private func setupPlaceHolderView() {
         let placeHolderImage = UIImage(resource: .placeHolderLogo)
         placeHolderImageView.image = placeHolderImage
@@ -351,17 +340,6 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return sectionParams.cellSpacing
     }
-    //    
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-    //        
-    //        let indexPath = IndexPath(row: 0, section: section)
-    //        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
-    //        
-    //        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
-    //                                                         height: UIView.layoutFittingExpandedSize.height),
-    //                                                         withHorizontalFittingPriority: .required,
-    //                                                         verticalFittingPriority: .fittingSizeLevel)
-    //    }
 }
 
 extension TrackersViewController: TrackerTypeSelectionViewControllerDelegate {
