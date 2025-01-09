@@ -11,6 +11,16 @@ protocol TrackerTypeSelectionViewControllerDelegate: AnyObject {
     func createTracker(_ tracker: Tracker, _ category: String)
 }
 
+enum TrackerType: Int {
+    case habit
+    case nonregular
+    
+    var title: String {
+        let trackerTypes = ["Привычка", "Нерегулярное событие"]
+        return trackerTypes[self.rawValue]
+    }
+}
+
 final class TrackerTypeSelectionViewController: UIViewController {
     weak var delegate: TrackerTypeSelectionViewControllerDelegate?
     
@@ -28,13 +38,13 @@ final class TrackerTypeSelectionViewController: UIViewController {
     
     private func setupButtonsStackView() {
         habitButton.setTitleColor(.trackerWhite, for: .normal)
-        habitButton.setTitle("Привычка", for: .normal)
+        habitButton.setTitle(TrackerType.habit.title, for: .normal)
         habitButton.backgroundColor = .trackerBlack
         habitButton.layer.cornerRadius = 16.0
         habitButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         habitButton.addTarget(self, action: #selector(didTapHabitButton), for: .touchUpInside)
         
-        nonregularEventButton.setTitle("Нерегулярное событие", for: .normal)
+        nonregularEventButton.setTitle(TrackerType.nonregular.title, for: .normal)
         nonregularEventButton.backgroundColor = .trackerBlack
         nonregularEventButton.layer.cornerRadius = 16.0
         nonregularEventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -71,14 +81,14 @@ final class TrackerTypeSelectionViewController: UIViewController {
     
     @objc
     private func didTapHabitButton() {
-        let trackerCreationViewController = TrackerCreationViewController()
+        let trackerCreationViewController = TrackerCreationViewController(trackerType: .habit)
         trackerCreationViewController.delegate = self
         navigationController?.pushViewController(trackerCreationViewController, animated: true)
     }
     
     @objc
     private func didTapNonregularEventButton() {
-        let nonregularTrackerCreationViewController = NonreglarTrackerCreationViewController()
+        let nonregularTrackerCreationViewController = TrackerCreationViewController(trackerType: .nonregular)
         nonregularTrackerCreationViewController.delegate = self
         navigationController?.pushViewController(nonregularTrackerCreationViewController, animated: true)
     }
