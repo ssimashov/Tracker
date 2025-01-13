@@ -333,6 +333,11 @@ extension TrackerCreationViewController: UITextFieldDelegate{
         
         return newString.count <= maxLength
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+         textField.resignFirstResponder()
+         return true
+     }
 }
 
 extension TrackerCreationViewController: UITableViewDelegate {
