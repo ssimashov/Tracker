@@ -97,14 +97,14 @@ final class TrackerCategoryStore: NSObject {
         let trackersResult = trackersArray.map { trackerCoreData in
             Tracker(id: trackerCoreData.id ?? UUID(),
                     title: trackerCoreData.title ?? String(),
-                    color: trackerCoreData.color as? UIColor ?? UIColor(resource: .ypRed),
+                    color: trackerCoreData.color as? UIColor ?? UIColor(resource: .trackerRed),
                     emoji: trackerCoreData.emoji ?? String(),
                     schedule: DaysValueTransformer().reverseTransformedValue(trackerCoreData.schedule) as? [Weekday] ?? []
             )
         }
         return TrackerCategory(title: title, trackers: trackersResult)
     }
-
+    
 }
 
 

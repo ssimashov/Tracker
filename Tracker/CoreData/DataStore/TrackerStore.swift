@@ -11,12 +11,12 @@ import CoreData
 final class TrackerStore: NSObject {
     private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
     private let context: NSManagedObjectContext
-
-        
+    
+    
     init(context: NSManagedObjectContext) {
         self.context = context
         super.init()
-
+        
         let fetchRequest = TrackerCoreData.fetchRequest()
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)

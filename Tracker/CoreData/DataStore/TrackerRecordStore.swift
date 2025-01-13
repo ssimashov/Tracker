@@ -18,7 +18,7 @@ enum TrackerRecordStoreError: Error {
 final class TrackerRecordStore: NSObject {
     private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>?
     private let context: NSManagedObjectContext
-
+    
     var completedTrackers: [TrackerRecord] {
         guard
             let objects = self.fetchedResultsController?.fetchedObjects,
@@ -26,11 +26,11 @@ final class TrackerRecordStore: NSObject {
         else { return [] }
         return completedTrackers
     }
-        
+    
     init(context: NSManagedObjectContext) {
         self.context = context
         super.init()
-
+        
         let fetchRequest = TrackerRecordCoreData.fetchRequest()
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerRecordCoreData.id, ascending: true)
