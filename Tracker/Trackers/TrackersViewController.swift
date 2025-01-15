@@ -46,6 +46,15 @@ enum Weekday: Int, CaseIterable, Codable {
 
 final class TrackersViewController: UIViewController {
     
+    private let sectionParams = GeometricParams(cellCount: 2,
+                                                leftInset: 16,
+                                                rightInset: 16,
+                                                topInset: 12,
+                                                bottomInset: 16,
+                                                cellSpacing: 9,
+                                                lineSpacing: 0
+    )
+    
     private var trackerCategoryStore: TrackerCategoryStore?
     private var trackerRecordStore: TrackerRecordStore?
     
@@ -69,15 +78,6 @@ final class TrackersViewController: UIViewController {
     private lazy var searchController = UISearchController(searchResultsController: nil)
     private lazy var datePicker = UIDatePicker()
     private lazy var trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    
-    private let sectionParams = GeometricParams(cellCount: 2,
-                                                leftInset: 16,
-                                                rightInset: 16,
-                                                topInset: 12,
-                                                bottomInset: 16,
-                                                cellSpacing: 9,
-                                                lineSpacing: 0
-    )
     
     private var calendar = Calendar(identifier: .gregorian)
     

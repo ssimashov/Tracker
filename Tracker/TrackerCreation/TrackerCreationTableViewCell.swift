@@ -8,6 +8,9 @@
 import UIKit
 
 final class TrackerCreationTableViewCell: UITableViewCell {
+    
+    static let identifier = "TrackerCreationCell"
+
     var trackerParameterName: String = "" {
         didSet {
             titleLabel.text = trackerParameterName
@@ -20,9 +23,7 @@ final class TrackerCreationTableViewCell: UITableViewCell {
             subtitleLabel.isHidden = subtitleLabel.text?.isEmpty ?? true
         }
     }
-    
-    static let identifier = "TrackerCreationCell"
-    
+        
     private lazy var titleLabel = UILabel()
     private lazy var subtitleLabel = UILabel()
     private lazy var cellImageView = UIImageView()

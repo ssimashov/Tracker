@@ -16,7 +16,7 @@ enum TrackerRecordStoreError: Error {
 
 
 final class TrackerRecordStore: NSObject {
-    private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>?
+
     private let context: NSManagedObjectContext
     
     var completedTrackers: [TrackerRecord] {
@@ -26,6 +26,8 @@ final class TrackerRecordStore: NSObject {
         else { return [] }
         return completedTrackers
     }
+    
+    private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>?
     
     init(context: NSManagedObjectContext) {
         self.context = context

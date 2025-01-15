@@ -8,13 +8,14 @@
 import UIKit
 
 final class EmojisCollectionHeaderView: UICollectionReusableView {
+    
+    static let identifier = "EmojisCollectionHeader"
+
     var categoryTitle: String = "" {
         didSet {
             titleLabel.text = categoryTitle
         }
-    }
-    
-    static let identifier = "EmojisCollectionHeader"
+    }   
     
     private lazy var titleLabel = UILabel()
     

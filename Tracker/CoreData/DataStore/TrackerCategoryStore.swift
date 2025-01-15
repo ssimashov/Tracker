@@ -18,8 +18,9 @@ protocol TrackerCategoryStoreDelegate: AnyObject {
 }
 
 final class TrackerCategoryStore: NSObject {
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
+    
     private let context: NSManagedObjectContext
+    
     weak var delegate: TrackerCategoryStoreDelegate?
     
     var categories: [TrackerCategory] {
@@ -30,6 +31,8 @@ final class TrackerCategoryStore: NSObject {
         return categories
     }
     
+    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
+ 
     init(context: NSManagedObjectContext) {
         self.context = context
         super.init()

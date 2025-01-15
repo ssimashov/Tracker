@@ -8,13 +8,14 @@
 import UIKit
 
 final class TrackersCollectionSupplementaryView: UICollectionReusableView {
+    
+    static let identifier = "TrackersCollectionHeader"
+    
     var categoryTitle: String = String() {
         didSet {
             titleLabel.text = categoryTitle
         }
     }
-    
-    static let identifier = "TrackersCollectionHeader"
     
     private lazy var titleLabel = UILabel()
     

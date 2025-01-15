@@ -12,9 +12,11 @@ protocol TrackersCollectionViewCellDelegate: AnyObject {
 }
 
 final class TrackersCollectionViewCell: UICollectionViewCell {
-    weak var delegate: TrackersCollectionViewCellDelegate?
+    
     static let identifier = "TrackersCollectionCell"
     
+    weak var delegate: TrackersCollectionViewCellDelegate?
+
     var tracker: Tracker? {
         didSet {
             trakerTitleLabel.text = tracker?.title
@@ -65,6 +67,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupCell()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func setCompleteButtonAvailabilyty(to state: Bool) {
@@ -148,10 +154,6 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             completeButton.heightAnchor.constraint(equalToConstant: 34),
             completeButton.widthAnchor.constraint(equalToConstant: 34),
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     private func setupCompleteButton(isChecked: Bool) {

@@ -12,6 +12,32 @@ protocol TrackerCreationViewControllerDelegate: AnyObject {
 }
 
 final class TrackerCreationViewController: UIViewController {
+    
+    private let weekdays = Array(Weekday.allCases[1..<Weekday.allCases.count] + Weekday.allCases[0..<1])
+    
+    private let colorsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
+    private let cardColors = [0xFD4C49, 0xFF881E, 0x007BFA, 0x6E44FE, 0x33CF69, 0xE66DD4,
+                              0xF9D4D4, 0x34A7FE, 0x46E69D, 0x35347C, 0xFF674D, 0xFF99CC,
+                              0xF6C48B, 0x7994F5, 0x832CF1, 0xAD56DA, 0x8D72E6, 0x2FD058
+    ]
+    
+    private let collectionsSectionParams = GeometricParams(cellCount: 6,
+                                                           leftInset: 18,
+                                                           rightInset: 18,
+                                                           topInset: 24,
+                                                           bottomInset: 24,
+                                                           cellSpacing: 0,
+                                                           lineSpacing: 0)
+    private let emojisCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
+    private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
+                          "😇", "😡", "🥶", "🤔", "🙌", "🍔",
+                          "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
+    ]
+    
+    private let trackerType: TrackerType
+    
     weak var delegate: TrackerCreationViewControllerDelegate?
     
     private lazy var trackerNameTextField = UITextField()
@@ -25,40 +51,21 @@ final class TrackerCreationViewController: UIViewController {
     private lazy var trackerCreationTableView = UITableView()
     private lazy var trackerCreationScrollView = UIScrollView()
     
-    
     private var trackerCategory: String
-    private let weekdays = Array(Weekday.allCases[1..<Weekday.allCases.count] + Weekday.allCases[0..<1])
+ 
     private var schedule: [Weekday] = []
     private var trackerParameters: [(name: String, desc: String)] = [("Категория", ""), ("Расписание", "")]
     
-    private let colorsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private var pickedColorIndex = -1
-    private let cardColors = [0xFD4C49, 0xFF881E, 0x007BFA, 0x6E44FE, 0x33CF69, 0xE66DD4,
-                              0xF9D4D4, 0x34A7FE, 0x46E69D, 0x35347C, 0xFF674D, 0xFF99CC,
-                              0xF6C48B, 0x7994F5, 0x832CF1, 0xAD56DA, 0x8D72E6, 0x2FD058
-    ]
-    
-    private let collectionsSectionParams = GeometricParams(cellCount: 6,
-                                                           leftInset: 18,
-                                                           rightInset: 18,
-                                                           topInset: 24,
-                                                           bottomInset: 24,
-                                                           cellSpacing: 0,
-                                                           lineSpacing: 0)
-    
+
     private var CollectionsCellSize: Double {
         let availableWidth = view.frame.width - collectionsSectionParams.paddingWidth
         return availableWidth / CGFloat(collectionsSectionParams.cellCount)
     }
     
-    private let emojisCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+
     private var pickedEmojiIndex = -1
-    private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
-                          "😇", "😡", "🥶", "🤔", "🙌", "🍔",
-                          "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
-    ]
-    
-    private let trackerType: TrackerType
+ 
     
     init(trackerType: TrackerType) {
         self.trackerType = trackerType
@@ -135,7 +142,7 @@ final class TrackerCreationViewController: UIViewController {
             }
         }
         NSLayoutConstraint.activate([
-            trackerCreationTableView.heightAnchor.constraint(equalToConstant: trackerCreationTableView.rowHeight * trackerCreationTableRowCount),
+            trackerCreationTableView.heightAnchor.constraint(equalToConstant: (trackerCreationTableView.rowHeight * trackerCreationTableRowCount) - 1),
             trackerCreationTableView.widthAnchor.constraint(equalTo: trackerCreationScrollView.widthAnchor, constant: -32),
             trackerCreationTableView.topAnchor.constraint(equalTo: trackerNameStackView.bottomAnchor, constant: 24),
             trackerCreationTableView.leadingAnchor.constraint(equalTo: trackerCreationScrollView.leadingAnchor, constant: 16),

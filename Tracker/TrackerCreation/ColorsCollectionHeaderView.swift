@@ -8,13 +8,14 @@
 import UIKit
 
 final class ColorsCollectionHeaderView: UICollectionReusableView {
+    
+    static let identifier = "ColorsCollectionHeader"
+    
     var categoryTitle: String = "" {
         didSet {
             titleLabel.text = categoryTitle
         }
     }
-    
-    static let identifier = "ColorsCollectionHeader"
     
     private lazy var titleLabel = UILabel()
     
