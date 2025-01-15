@@ -22,7 +22,7 @@ struct GeometricParams {
     }
 }
 
-enum Weekday: Int, CaseIterable {
+enum Weekday: Int, CaseIterable, Codable {
     case sunday
     case monday
     case tuesday
@@ -45,6 +45,10 @@ enum Weekday: Int, CaseIterable {
 }
 
 final class TrackersViewController: UIViewController {
+    
+    private var trackerCategoryStore: TrackerCategoryStore?
+    private var trackerRecordStore: TrackerRecordStore?
+    
     private var completedTrackers: [TrackerRecord] = []
     
     private var categories: [TrackerCategory] = []
@@ -86,6 +90,18 @@ final class TrackersViewController: UIViewController {
         setupNavigationItem()
         setupPlaceHolderView()
         setupTrackersCollectionView()
+        
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+            trackerCategoryStore = TrackerCategoryStore(context: context)
+            trackerRecordStore = TrackerRecordStore(context: context)
+        }
+        
+        completedTrackers = trackerRecordStore?.completedTrackers ?? []
+        categories = trackerCategoryStore?.categories ?? []
+        trackerCategoryStore?.delegate = self
+        
+        updateFilters(date: currentDate, searchText: searchController.searchBar.text ?? "")
+        updatePlaceHolderViewVisibility()
     }
     
     private func setupNavigationItem() {
@@ -126,6 +142,8 @@ final class TrackersViewController: UIViewController {
                 tracker.schedule.contains(where: {$0.rawValue == weekday})
                 || isNonregularTrackerNotComplete(tracker)
                 || isNonregularTrackerComplete(tracker, at: date)
+            }.sorted { tracker1, tracker2 in
+                tracker1.title < tracker2.title
             }
             return TrackerCategory(title: category.title, trackers: trackers)
         }
@@ -146,6 +164,8 @@ final class TrackersViewController: UIViewController {
         let filteredTrackersinCategories = filteredCategories.map { category in
             let trackers = category.trackers.filter { tracker in
                 tracker.title.lowercased().contains(substring.lowercased())
+            }.sorted { tracker1, tracker2 in
+                tracker1.title < tracker2.title
             }
             return TrackerCategory(title: category.title, trackers: trackers)
         }
@@ -348,28 +368,32 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersViewController: TrackerTypeSelectionViewControllerDelegate {
     func createTracker(_ tracker: Tracker, _ category: String) {
         if categories.map({$0.title}).contains(category) == false {
-            categories.append(TrackerCategory(title: category, trackers: [tracker]))
+            let newCategory = TrackerCategory(title: category, trackers: [tracker])
+            categories.append(newCategory)
+            try? trackerCategoryStore?.addNewTrackerCategory(newCategory)
         }
+        
         else if let index = categories.firstIndex(where: {$0.title == category}) {
             var trackers: [Tracker] = categories[index].trackers
             trackers.append(tracker)
-            categories[index] = TrackerCategory(title: categories[index].title, trackers: trackers)
+            let newCategory = TrackerCategory(title: categories[index].title, trackers: trackers)
+            categories[index] = newCategory
+            try? trackerCategoryStore?.updateExistCategory(trackerCategoryTitle: category, tracker: tracker)
         }
-        
-        updateFilters(date: currentDate, searchText: searchController.searchBar.text ?? "")
-        trackersCollectionView.reloadData()
-        updatePlaceHolderViewVisibility()
     }
 }
+
 
 extension TrackersViewController: TrackersCollectionViewCellDelegate {
     func createTrackerRecord(_ id: UUID, _ trackerDate: Date) {
         if completedTrackers.contains(where: {$0.id == id && calendar.isDate($0.date, inSameDayAs: trackerDate)}) {
             completedTrackers.removeAll(where: {$0.id == id && calendar.isDate($0.date, inSameDayAs: trackerDate)})
+            try? trackerRecordStore?.removeTrackerRecord(TrackerRecord(id: id, date: trackerDate))
         } else {
             completedTrackers.append(TrackerRecord(id: id, date: trackerDate))
+            try? trackerRecordStore?.addNewTrackerRecord(TrackerRecord(id: id, date: trackerDate))
+            
         }
-        
         updateFilters(date: currentDate, searchText: searchController.searchBar.text ?? "")
         trackersCollectionView.reloadData()
         updatePlaceHolderViewVisibility()
@@ -383,5 +407,14 @@ extension TrackersViewController: UISearchBarDelegate {
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
+    }
+}
+
+extension TrackersViewController: TrackerCategoryStoreDelegate {
+    func storeDidUpdate(_ store: TrackerCategoryStore) {
+        categories = store.categories
+        updateFilters(date: currentDate, searchText: searchController.searchBar.text ?? "")
+        updatePlaceHolderViewVisibility()
+        trackersCollectionView.reloadData()
     }
 }
