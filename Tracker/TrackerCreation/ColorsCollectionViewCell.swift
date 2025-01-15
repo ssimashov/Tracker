@@ -8,6 +8,9 @@
 import UIKit
 
 final class ColorsCollectionViewCell: UICollectionViewCell {
+    
+    static let identifier = "ColorsCollectionCell"
+
     var color: Int = Int() {
         didSet {
             outerColorCardView.layer.borderColor = UIColor(rgb: color).withAlphaComponent(0.3).cgColor
@@ -20,8 +23,6 @@ final class ColorsCollectionViewCell: UICollectionViewCell {
             outerColorCardView.isHidden = !isPicked
         }
     }
-    
-    static let identifier = "ColorsCollectionCell"
     
     private lazy var outerColorCardView = UIView()
     private lazy var innerColorCardView = UIView()
@@ -37,20 +38,17 @@ final class ColorsCollectionViewCell: UICollectionViewCell {
     
     
     private func setupCell() {
-        outerColorCardView.layer.cornerRadius = 8
-        outerColorCardView.layer.masksToBounds = true
         outerColorCardView.layer.borderWidth = 3
         outerColorCardView.backgroundColor = .trackerWhite.withAlphaComponent(0)
         outerColorCardView.layer.isHidden = false
         
-        innerColorCardView.layer.cornerRadius = 8
-        innerColorCardView.layer.masksToBounds = true
         
-        outerColorCardView.translatesAutoresizingMaskIntoConstraints = false
-        innerColorCardView.translatesAutoresizingMaskIntoConstraints = false
-        
-        contentView.addSubview(outerColorCardView)
-        contentView.addSubview(innerColorCardView)
+        [outerColorCardView,innerColorCardView].forEach {
+            contentView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.layer.cornerRadius = 8
+            $0.layer.masksToBounds = true
+        }
         
         NSLayoutConstraint.activate([
             outerColorCardView.widthAnchor.constraint(equalTo: contentView.widthAnchor),

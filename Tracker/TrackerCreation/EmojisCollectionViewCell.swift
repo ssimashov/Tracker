@@ -8,6 +8,9 @@
 import UIKit
 
 final class EmojisCollectionViewCell: UICollectionViewCell {
+    
+    static let identifier = "EmojisCollectionCell"
+
     var emoji: String  = "" {
         didSet {
             emojiLabel.text = emoji
@@ -19,9 +22,7 @@ final class EmojisCollectionViewCell: UICollectionViewCell {
             setEmojiLabelBackgroundColorTransparency(to: !isPicked)
         }
     }
-    
-    static let identifier = "EmojisCollectionCell"
-    
+        
     private lazy var emojiLabel = UILabel()
     
     override init(frame: CGRect) {

@@ -9,10 +9,11 @@ import UIKit
 import CoreData
 
 final class TrackerStore: NSObject {
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
+    
     private let context: NSManagedObjectContext
     
-    
+    private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
+   
     init(context: NSManagedObjectContext) {
         self.context = context
         super.init()

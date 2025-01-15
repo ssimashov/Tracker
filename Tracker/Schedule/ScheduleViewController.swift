@@ -14,10 +14,14 @@ protocol ScheduleViewControllerDelegate: AnyObject {
 
 
 final class ScheduleViewController: UIViewController {
-    weak var delegate: ScheduleViewControllerDelegate?
+    
     
     private let weekdays = Array(Weekday.allCases[1..<Weekday.allCases.count] + Weekday.allCases[0..<1])
+    
+    weak var delegate: ScheduleViewControllerDelegate?
+    
     var schedule: [(weekday: Weekday, isChecked: Bool)] = []
+
     
     private lazy var scheduleTableView = UITableView(frame: .zero, style: .plain)
     private lazy var completeButton = UIButton()
