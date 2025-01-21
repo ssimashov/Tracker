@@ -208,6 +208,7 @@ final class TrackerCreationViewController: UIViewController {
         
         trackerCreationTableView.separatorColor = .trackerGray
         trackerCreationTableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        trackerCreationTableView.isScrollEnabled = false
         trackerCreationTableView.rowHeight = 75
         trackerCreationTableView.layer.cornerRadius = 16
         trackerCreationTableView.layer.masksToBounds = true
