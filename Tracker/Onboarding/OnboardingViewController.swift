@@ -154,7 +154,7 @@ final class OnboardingViewController: UIPageViewController {
     
     @objc
     func didTapContinueButton() {
-        userDefaults.set(true, forKey: "isOnboardingSkipped")
+//        userDefaults.set(true, forKey: "isOnboardingSkipped")
         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         guard let window = windowScene?.windows.first else {
             assertionFailure("Invalid window configuration")

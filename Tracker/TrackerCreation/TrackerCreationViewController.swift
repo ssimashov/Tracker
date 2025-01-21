@@ -51,7 +51,7 @@ final class TrackerCreationViewController: UIViewController {
     private lazy var trackerCreationTableView = UITableView()
     private lazy var trackerCreationScrollView = UIScrollView()
     
-    private var trackerCategory: String
+    private var trackerCategory: String = ""
  
     private var schedule: [Weekday] = []
     private var trackerParameters: [(name: String, desc: String)] = [("Категория", ""), ("Расписание", "")]
@@ -69,12 +69,6 @@ final class TrackerCreationViewController: UIViewController {
     
     init(trackerType: TrackerType) {
         self.trackerType = trackerType
-        switch trackerType {
-        case .habit:
-            self.trackerCategory = "Привычная категория"
-        case .nonregular:
-            self.trackerCategory = "Нерегулярная категория"
-        }
         trackerParameters[0].desc = trackerCategory
         super.init(nibName: nil, bundle: nil)
     }
@@ -122,7 +116,7 @@ final class TrackerCreationViewController: UIViewController {
             trackerCreationScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             trackerCreationScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             trackerCreationScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            trackerCreationScrollView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor)
+            trackerCreationScrollView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -16)
         ])
         
         NSLayoutConstraint.activate([
@@ -170,7 +164,6 @@ final class TrackerCreationViewController: UIViewController {
             colorsCollectionView.heightAnchor.constraint(equalToConstant: colorsCollectionHeight),
             colorsCollectionView.widthAnchor.constraint(equalTo: trackerCreationScrollView.widthAnchor)
         ])
-        
         
     }
     
@@ -239,10 +232,8 @@ final class TrackerCreationViewController: UIViewController {
         colorsCollectionView.register(ColorsCollectionViewCell.self, forCellWithReuseIdentifier: ColorsCollectionViewCell.identifier)
         colorsCollectionView.register(ColorsCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ColorsCollectionHeaderView.identifier)
         
-        
         colorsCollectionView.backgroundColor = .trackerWhite
         colorsCollectionView.isScrollEnabled = false
-        
         
         colorsCollectionView.dataSource = self
         colorsCollectionView.delegate = self
@@ -283,7 +274,7 @@ final class TrackerCreationViewController: UIViewController {
             buttonsStackView.heightAnchor.constraint(equalToConstant: 60),
             buttonsStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             buttonsStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24)
         ])
     }
     
@@ -349,14 +340,26 @@ extension TrackerCreationViewController: UITextFieldDelegate{
 
 extension TrackerCreationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let scheduleViewController = ScheduleViewController()
-        scheduleViewController.delegate = self
-        
-        if indexPath.row == 1 {
-            scheduleViewController.schedule = weekdays.map{($0, schedule.contains($0))}
-            navigationController?.pushViewController(scheduleViewController, animated: true)
-        }
+        if indexPath.row == 0 {
+             let categoriesViewController = CategoriesViewController()
+             let categoriesViewModel = CategoriesViewModel(pickedTitle: trackerParameters[0].desc)
+             categoriesViewController.delegate = self
+             categoriesViewController.categoriesViewModel = categoriesViewModel
+             navigationController?.pushViewController(categoriesViewController, animated: true)
+         }
+         else if indexPath.row == 1 {
+             let scheduleViewController = ScheduleViewController()
+             scheduleViewController.delegate = self
+             scheduleViewController.schedule = weekdays.map{($0, schedule.contains($0))}
+             navigationController?.pushViewController(scheduleViewController, animated: true)
+         }
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+         cell.separatorInset = (indexPath.row == trackerParameters.count - 1)
+             ? UIEdgeInsets(top: 0, left: cell.bounds.width, bottom: 0, right: 0)
+             : UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+     }
 }
 
 extension TrackerCreationViewController: UITableViewDataSource {
@@ -505,4 +508,15 @@ extension TrackerCreationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 18)
     }
+}
+
+extension TrackerCreationViewController: CategoriesViewControllerDelegate {
+    func updateCategoryInfo(_ categoryTitle: String) {
+        trackerCategory = categoryTitle
+        trackerParameters[0].desc = categoryTitle
+
+        trackerCreationTableView.reloadData()
+        setupAddButton()
+    }
+
 }
