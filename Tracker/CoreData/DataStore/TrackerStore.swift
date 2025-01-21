@@ -13,7 +13,7 @@ final class TrackerStore: NSObject {
     private let context: NSManagedObjectContext
     
     private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
-   
+    
     init(context: NSManagedObjectContext) {
         self.context = context
         super.init()

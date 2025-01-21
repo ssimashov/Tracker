@@ -10,7 +10,7 @@ import UIKit
 final class ColorsCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "ColorsCollectionCell"
-
+    
     var color: Int = Int() {
         didSet {
             outerColorCardView.layer.borderColor = UIColor(rgb: color).withAlphaComponent(0.3).cgColor

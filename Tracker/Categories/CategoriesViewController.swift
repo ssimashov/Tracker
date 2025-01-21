@@ -13,7 +13,7 @@ protocol CategoriesViewControllerDelegate: AnyObject {
 
 final class CategoriesViewController: UIViewController {
     weak var delegate: CategoriesViewControllerDelegate?
-
+    
     private let categoriesTableView = UITableView(frame: .zero, style: .plain)
     private let addCategoryButton = UIButton()
     
@@ -58,7 +58,7 @@ final class CategoriesViewController: UIViewController {
         categoriesTableView.layer.cornerRadius = 16
         categoriesTableView.layer.masksToBounds = true
         categoriesTableView.tableHeaderView = UIView()
-    
+        
         categoriesTableView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(categoriesTableView)
@@ -131,7 +131,7 @@ final class CategoriesViewController: UIViewController {
             placeHolderLabel.trailingAnchor.constraint(equalTo: placeHolderView.trailingAnchor)
         ])
     }
-
+    
     @objc
     private func didTapAddCategoryButton() {
         let categoryEditingViewController = CategoryEditingViewController()

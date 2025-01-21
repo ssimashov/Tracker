@@ -15,7 +15,7 @@ final class CategoryEditingViewController: UIViewController {
     weak var delegate: CategoryEditingViewControllerDelegate?
     private let categoryNameTextField = UITextField()
     private let completeButton = UIButton()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .trackerWhite

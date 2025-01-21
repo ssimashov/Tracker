@@ -13,20 +13,20 @@ final class OnboardingViewController: UIPageViewController {
     private lazy var pages: [UIViewController] = {
         let first = UIViewController()
         setupOnboardingFirstPage(view: first.view)
-
+        
         let second = UIViewController()
         setupOnboardingSecondPage(view: second.view)
-
+        
         return [first, second]
     }()
-        
+    
     private lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
         pageControl.currentPageIndicatorTintColor = .trackerBlack
         pageControl.pageIndicatorTintColor = .trackerBlack.withAlphaComponent(0.3)
-
+        
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         
         return pageControl
@@ -49,10 +49,10 @@ final class OnboardingViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         dataSource = self
         delegate = self
-
+        
         setupContinueButton()
         
         if let first = pages.first {
@@ -154,7 +154,6 @@ final class OnboardingViewController: UIPageViewController {
     
     @objc
     func didTapContinueButton() {
-//        userDefaults.set(true, forKey: "isOnboardingSkipped")
         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         guard let window = windowScene?.windows.first else {
             assertionFailure("Invalid window configuration")
@@ -169,13 +168,13 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
         guard let viewControllerIndex = pages.firstIndex(of: viewController) else {
             return nil
         }
-
+        
         let previousIndex = viewControllerIndex - 1
-
+        
         guard previousIndex >= 0 else {
             return nil
         }
-
+        
         return pages[previousIndex]
     }
     
@@ -183,13 +182,13 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
         guard let viewControllerIndex = pages.firstIndex(of: viewController) else {
             return nil
         }
-
+        
         let nextIndex = viewControllerIndex + 1
-
+        
         guard nextIndex < pages.count else {
             return nil
         }
-
+        
         return pages[nextIndex]
     }
 }
@@ -197,7 +196,7 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
 
 extension OnboardingViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-
+        
         if let currentViewController = pageViewController.viewControllers?.first,
            let currentIndex = pages.firstIndex(of: currentViewController) {
             pageControl.currentPage = currentIndex

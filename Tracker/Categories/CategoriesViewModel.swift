@@ -15,7 +15,7 @@ final class CategoriesViewModel {
     
     var onSelectCategory: Binding<String>?
     var onAddCategory: Binding<Void>?
-
+    
     private(set) var categories: [String]  = []
     
     var pickedTitle: String = String()
@@ -27,7 +27,7 @@ final class CategoriesViewModel {
         }
         categories = trackerCategoryStore?.categories.map({$0.title}) ?? []
         pickedCategoryIndex = categories.firstIndex(of: pickedTitle) ?? -1
-
+        
     }
     
     func selectCategory(at index: Int) {

@@ -21,7 +21,7 @@ final class ScheduleViewController: UIViewController {
     weak var delegate: ScheduleViewControllerDelegate?
     
     var schedule: [(weekday: Weekday, isChecked: Bool)] = []
-
+    
     
     private lazy var scheduleTableView = UITableView(frame: .zero, style: .plain)
     private lazy var completeButton = UIButton()

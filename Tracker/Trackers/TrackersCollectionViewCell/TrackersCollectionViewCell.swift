@@ -16,7 +16,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     static let identifier = "TrackersCollectionCell"
     
     weak var delegate: TrackersCollectionViewCellDelegate?
-
+    
     var tracker: Tracker? {
         didSet {
             trakerTitleLabel.text = tracker?.title
