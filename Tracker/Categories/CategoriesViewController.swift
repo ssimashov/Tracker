@@ -37,7 +37,7 @@ final class CategoriesViewController: UIViewController {
     }
     
     private func bind() {
-        guard let categoriesViewModel = categoriesViewModel else { return }
+        guard let categoriesViewModel else { return }
         categoriesViewModel.onSelectCategory = { [weak self] category in
             self?.categoriesTableView.reloadData()
             self?.delegate?.updateCategoryInfo(category)
