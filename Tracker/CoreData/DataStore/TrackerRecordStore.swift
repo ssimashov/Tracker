@@ -16,7 +16,7 @@ enum TrackerRecordStoreError: Error {
 
 
 final class TrackerRecordStore: NSObject {
-
+    
     private let context: NSManagedObjectContext
     
     var completedTrackers: [TrackerRecord] {

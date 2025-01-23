@@ -269,8 +269,6 @@ final class TrackersViewController: UIViewController {
         let addEventNavigationontroller = UINavigationController(rootViewController: trackerTypeSelectionViewController)
         navigationController?.present(addEventNavigationontroller, animated: true)
         addEventNavigationontroller.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium)]
-        
-        
     }
     
     @objc
@@ -382,7 +380,6 @@ extension TrackersViewController: TrackerTypeSelectionViewControllerDelegate {
         }
     }
 }
-
 
 extension TrackersViewController: TrackersCollectionViewCellDelegate {
     func createTrackerRecord(_ id: UUID, _ trackerDate: Date) {

@@ -32,7 +32,7 @@ final class TrackerCategoryStore: NSObject {
     }
     
     private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
- 
+    
     init(context: NSManagedObjectContext) {
         self.context = context
         super.init()

@@ -10,7 +10,7 @@ import UIKit
 final class EmojisCollectionHeaderView: UICollectionReusableView {
     
     static let identifier = "EmojisCollectionHeader"
-
+    
     var categoryTitle: String = "" {
         didSet {
             titleLabel.text = categoryTitle

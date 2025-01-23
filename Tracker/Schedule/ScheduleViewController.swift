@@ -21,7 +21,7 @@ final class ScheduleViewController: UIViewController {
     weak var delegate: ScheduleViewControllerDelegate?
     
     var schedule: [(weekday: Weekday, isChecked: Bool)] = []
-
+    
     
     private lazy var scheduleTableView = UITableView(frame: .zero, style: .plain)
     private lazy var completeButton = UIButton()
@@ -31,17 +31,17 @@ final class ScheduleViewController: UIViewController {
         view.backgroundColor = .trackerWhite
         navigationItem.title = "Расписание"
         navigationItem.hidesBackButton = true
-        setupTableView()
         setupCompleteButton()
+        setupTableView()
     }
     
     private func setupTableView() {
         scheduleTableView.register(ScheduleTableViewCell.self, forCellReuseIdentifier: ScheduleTableViewCell.identifier)
         
         scheduleTableView.dataSource = self
+        scheduleTableView.delegate = self
         
         scheduleTableView.allowsSelection = false
-        scheduleTableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         scheduleTableView.rowHeight = 75
         scheduleTableView.layer.cornerRadius = 16
         scheduleTableView.layer.masksToBounds = true
@@ -52,8 +52,8 @@ final class ScheduleViewController: UIViewController {
         view.addSubview(scheduleTableView)
         
         NSLayoutConstraint.activate([
-            scheduleTableView.heightAnchor.constraint(equalToConstant: 524),
             scheduleTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            scheduleTableView.bottomAnchor.constraint(equalTo: completeButton.topAnchor, constant: -24),
             scheduleTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             scheduleTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
         ])
@@ -109,6 +109,20 @@ extension ScheduleViewController: ScheduleTableViewCellDelegate {
     func updateSchedule(_ weekday: Weekday) {
         if let index = schedule.firstIndex(where: {$0.weekday == weekday}) {
             schedule[index].isChecked = !schedule[index].isChecked
+        }
+    }
+}
+
+extension ScheduleViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == weekdays.count - 1 {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: cell.bounds.width, bottom: 0, right: 0)
+            cell.layer.masksToBounds = true
+            cell.layer.cornerRadius = 16
+            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        } else {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            cell.layer.masksToBounds = false
         }
     }
 }

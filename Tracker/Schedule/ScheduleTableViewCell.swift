@@ -14,7 +14,7 @@ protocol ScheduleTableViewCellDelegate: AnyObject {
 final class ScheduleTableViewCell: UITableViewCell {
     
     static let identifier = "ScheduleCell"
-
+    
     weak var delegate: ScheduleTableViewCellDelegate?
     
     var weekday: Weekday = .sunday {
