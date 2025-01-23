@@ -77,7 +77,7 @@ final class OnboardingViewController: UIPageViewController {
     
     private func setupContinueButton() {
         continueButton.setTitleColor(.trackerWhite, for: .normal)
-        continueButton.setTitle("Вот это технологии!", for: .normal)
+        continueButton.setTitle(NSLocalizedString("onboarding.button", comment: ""), for: .normal)
         continueButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         continueButton.layer.cornerRadius = 16.0
         continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .touchUpInside)
@@ -93,7 +93,7 @@ final class OnboardingViewController: UIPageViewController {
         backroundImageView.contentMode = .scaleAspectFill
         
         let label = UILabel()
-        label.text = "Отслеживайте только то, что хотите"
+        label.text = NSLocalizedString("onboarding.first", comment: "")
         label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
@@ -126,7 +126,7 @@ final class OnboardingViewController: UIPageViewController {
         backroundImageView.contentMode = .scaleAspectFill
         
         let label = UILabel()
-        label.text = "Даже если это \n не литры воды и йога"
+        label.text = NSLocalizedString("onboarding.second", comment: "")
         label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
@@ -155,7 +155,7 @@ final class OnboardingViewController: UIPageViewController {
     @objc
     func didTapContinueButton() {
         userDefaults.set(true, forKey: "isOnboardingSkipped")
-
+        
         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         guard let window = windowScene?.windows.first else {
             assertionFailure("Invalid window configuration")

@@ -7,7 +7,7 @@
 */
 
 "onboarding.first" = "Отслеживайте только то, что хотите";
-"onboarding.second" = "Даже если это не литры воды и йога";
+"onboarding.second" = "Даже если это \n не литры воды и йога";
 "onboarding.button" = "Вот это технологии!";
 "trackers" = "Трекеры";
 "statistics" = "Статистика";
@@ -48,7 +48,8 @@
 "stat.completed" = "Трекеров завершено";
 "best_period" = "Лучший период";
 "pefect_days" = "Идеальные дни";
-"average_value" = "Сдерднее значение";
+"average_value" = "Среднее значение";
+"lengthError" = "Ограничение 38 символов";
 
 "weekdays.monday" = "Понедельник";
 "weekdays.tuesday" = "Вторник";

@@ -16,7 +16,7 @@ enum TrackerType: Int {
     case nonregular
     
     var title: String {
-        let trackerTypes = ["Привычка", "Нерегулярное событие"]
+        let trackerTypes = [NSLocalizedString("habit", comment: ""), NSLocalizedString("event", comment: "")]
         return trackerTypes[self.rawValue]
     }
 }
@@ -32,7 +32,7 @@ final class TrackerTypeSelectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .trackerWhite
-        navigationItem.title = "Создание трекера"
+        navigationItem.title = NSLocalizedString("chooseTrackerVC.title", comment: "")
         setupButtonsStackView()
     }
     

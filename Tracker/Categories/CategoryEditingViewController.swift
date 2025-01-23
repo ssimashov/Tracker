@@ -25,7 +25,7 @@ final class CategoryEditingViewController: UIViewController {
     }
     
     private func setupNavigationItem() {
-        navigationItem.title = "Новая категория"
+        navigationItem.title = NSLocalizedString("category.new", comment: "")
         navigationItem.hidesBackButton = true
     }
     
@@ -38,7 +38,7 @@ final class CategoryEditingViewController: UIViewController {
         categoryNameTextField.tintColor = .trackerBlue
         categoryNameTextField.backgroundColor = .trackerBackground
         categoryNameTextField.attributedPlaceholder = NSAttributedString(
-            string: "Введите название категории",
+            string: NSLocalizedString("category.enterTitle", comment: ""),
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.trackerGray]
         )
         categoryNameTextField.layer.cornerRadius = 16.0
@@ -70,7 +70,7 @@ final class CategoryEditingViewController: UIViewController {
     
     private func setupCompleteButton() {
         completeButton.setTitleColor(.trackerWhite, for: .normal)
-        completeButton.setTitle("Готово", for: .normal)
+        completeButton.setTitle(NSLocalizedString("done", comment: ""), for: .normal)
         completeButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         completeButton.layer.cornerRadius = 16.0
         completeButton.addTarget(self, action: #selector(didTapCompleteButton), for: .touchUpInside)

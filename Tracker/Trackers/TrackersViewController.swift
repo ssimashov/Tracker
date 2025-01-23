@@ -105,7 +105,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupNavigationItem() {
-        navigationItem.title = "Трекеры"
+        navigationItem.title = NSLocalizedString("trackers", comment: "")
         navigationItem.searchController = searchController
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         navigationController?.modalPresentationStyle = .formSheet
@@ -115,8 +115,8 @@ final class TrackersViewController: UIViewController {
         
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Поиск"
-        searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
+        searchController.searchBar.placeholder = NSLocalizedString("placeholder.searchbar", comment: "")
+        searchController.searchBar.setValue(NSLocalizedString("cancel", comment: ""), forKey: "cancelButtonText")
         searchController.searchBar.searchTextField.clearButtonMode = .never
         searchController.searchBar.delegate = self
         
@@ -197,7 +197,7 @@ final class TrackersViewController: UIViewController {
         let placeHolderImage = UIImage(resource: .placeHolderLogo)
         placeHolderImageView.image = placeHolderImage
         
-        placeHolderLabel.text = "Что будем отслеживать?"
+        placeHolderLabel.text = NSLocalizedString("placeholder.noTrackers", comment: "")
         placeHolderLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         placeHolderLabel.textAlignment = .center
         

@@ -9,11 +9,6 @@ import UIKit
 
 final class TabBarViewController: UITabBarController {
     
-    private enum TabBarItem: String {
-        case trackers = "Трекеры"
-        case statistics = "Статистика"
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         createTabBar()
@@ -27,12 +22,12 @@ final class TabBarViewController: UITabBarController {
         viewControllers = [
             createTabBarItem(
                 viewController: navigationViewController,
-                title: TabBarItem.trackers.rawValue,
+                title: NSLocalizedString("trackers", comment: ""),
                 image: UIImage(named:"trackers")
             ),
             createTabBarItem(
                 viewController: StatisticsViewController(),
-                title: TabBarItem.statistics.rawValue,
+                title: NSLocalizedString("statistics", comment: ""),
                 image: UIImage(named:"statistics")
             )
         ]

@@ -26,7 +26,7 @@ final class CategoriesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .trackerWhite
-        navigationItem.title = "Категория"
+        navigationItem.title = NSLocalizedString("category", comment: "")
         navigationItem.hidesBackButton = true
         
         bind()
@@ -73,7 +73,7 @@ final class CategoriesViewController: UIViewController {
     
     private func setupAddCategoryButton() {
         addCategoryButton.setTitleColor(.trackerWhite, for: .normal)
-        addCategoryButton.setTitle("Добавить категорию", for: .normal)
+        addCategoryButton.setTitle(NSLocalizedString("category.add", comment: ""), for: .normal)
         addCategoryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addCategoryButton.backgroundColor = .trackerBlack
         addCategoryButton.layer.cornerRadius = 16.0
@@ -95,7 +95,7 @@ final class CategoriesViewController: UIViewController {
         let placeHolderImage = UIImage(resource: .placeHolderLogo)
         placeHolderImageView.image = placeHolderImage
         
-        placeHolderLabel.text = "Привычки и события можно\nобъединить по смыслу"
+        placeHolderLabel.text = NSLocalizedString("placeholder.noCategories", comment: "")
         placeHolderLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         placeHolderLabel.textAlignment = .center
         placeHolderLabel.numberOfLines = 2

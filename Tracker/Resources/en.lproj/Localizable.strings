@@ -49,7 +49,7 @@
 "best_period" = "Best period";
 "pefect_days" = "Perfect days";
 "average_value" = "Average value";
-
+"lengthError" = "Only 30 symbols";
 
 "weekdays.monday" = "Monday";
 "weekdays.tuesday" = "Tuesday";

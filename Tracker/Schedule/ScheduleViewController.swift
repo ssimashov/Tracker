@@ -29,7 +29,7 @@ final class ScheduleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .trackerWhite
-        navigationItem.title = "Расписание"
+        navigationItem.title = NSLocalizedString("schedule", comment: "")
         navigationItem.hidesBackButton = true
         setupCompleteButton()
         setupTableView()
@@ -61,7 +61,7 @@ final class ScheduleViewController: UIViewController {
     
     private func setupCompleteButton() {
         completeButton.setTitleColor(.trackerWhite, for: .normal)
-        completeButton.setTitle("Готово", for: .normal)
+        completeButton.setTitle(NSLocalizedString("done", comment: ""), for: .normal)
         completeButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         completeButton.backgroundColor = .trackerBlack
         completeButton.layer.cornerRadius = 16.0

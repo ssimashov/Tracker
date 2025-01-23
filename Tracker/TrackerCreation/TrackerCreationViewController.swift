@@ -54,7 +54,7 @@ final class TrackerCreationViewController: UIViewController {
     private var trackerCategory: String = ""
     
     private var schedule: [Weekday] = []
-    private var trackerParameters: [(name: String, desc: String)] = [("Категория", ""), ("Расписание", "")]
+    private var trackerParameters: [(name: String, desc: String)] = [(NSLocalizedString("category", comment: ""), ""), (NSLocalizedString("schedule", comment: ""), "")]
     
     private var pickedColorIndex = -1
     
@@ -88,9 +88,9 @@ final class TrackerCreationViewController: UIViewController {
     private func setupNavigationItem() {
         switch trackerType {
         case .habit:
-            navigationItem.title = "Новая привычка"
+            navigationItem.title = NSLocalizedString("habit.new", comment: "")
         case .nonregular:
-            navigationItem.title = "Новое нерегулярное событие"
+            navigationItem.title = NSLocalizedString("event.new", comment: "")
         }
         navigationItem.hidesBackButton = true
     }
@@ -171,7 +171,7 @@ final class TrackerCreationViewController: UIViewController {
         trackerNameStackView.axis = .vertical
         trackerNameStackView.spacing = 8
         
-        trackerNameLengthErrorLabel.text = "Ограничение 38 символов"
+        trackerNameLengthErrorLabel.text = NSLocalizedString("lengthError", comment: "")
         trackerNameLengthErrorLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         trackerNameLengthErrorLabel.textColor = .trackerRed
         trackerNameLengthErrorLabel.textAlignment = .center
@@ -186,7 +186,7 @@ final class TrackerCreationViewController: UIViewController {
         trackerNameTextField.tintColor = .trackerBlue
         trackerNameTextField.backgroundColor = .trackerBackground
         trackerNameTextField.attributedPlaceholder = NSAttributedString(
-            string: "Введите название трекера",
+            string: NSLocalizedString("trackerCreation.enterTitle", comment: ""),
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.trackerGray]
         )
         trackerNameTextField.layer.cornerRadius = 16.0
@@ -244,7 +244,7 @@ final class TrackerCreationViewController: UIViewController {
     
     private func setupButtonsStackView() {
         cancelButton.setTitleColor(.trackerRed, for: .normal)
-        cancelButton.setTitle("Отмена", for: .normal)
+        cancelButton.setTitle(NSLocalizedString("cancel", comment: ""), for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cancelButton.backgroundColor = .trackerWhite
         cancelButton.layer.cornerRadius = 16.0
@@ -253,7 +253,7 @@ final class TrackerCreationViewController: UIViewController {
         cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
         
         addButton.setTitleColor(.trackerWhite, for: .normal)
-        addButton.setTitle("Создать", for: .normal)
+        addButton.setTitle(NSLocalizedString("save", comment: ""), for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addButton.layer.cornerRadius = 16.0
         addButton.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
@@ -384,7 +384,7 @@ extension TrackerCreationViewController: ScheduleViewControllerDelegate {
     func updateScheduleInfo(_ weekdays: [Weekday]) {
         schedule = weekdays
         if weekdays.count == Weekday.allCases.count {
-            trackerParameters[1].desc = "Каждый день"
+            trackerParameters[1].desc = NSLocalizedString("weekdays.all", comment: "")
         } else {
             trackerParameters[1].desc = weekdays.map{$0.shortname}.joined(separator: ", ")
         }
@@ -445,7 +445,7 @@ extension TrackerCreationViewController: UICollectionViewDataSource {
                 return UICollectionReusableView()
             }
             
-            view.categoryTitle = "Цвет"
+            view.categoryTitle = NSLocalizedString("color", comment: "")
             return view
         }
         else if collectionView == emojisCollectionView {
@@ -462,7 +462,7 @@ extension TrackerCreationViewController: UICollectionViewDataSource {
                 return UICollectionReusableView()
             }
             
-            view.categoryTitle = "Emoji"
+            view.categoryTitle = NSLocalizedString("emoji", comment: "")
             return view
         }
         return UICollectionReusableView()
