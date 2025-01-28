@@ -68,6 +68,7 @@ final class TrackerCategoryStore: NSObject {
             trackerCoreData.color = tracker.color
             trackerCoreData.emoji = tracker.emoji
             trackerCoreData.schedule = DaysValueTransformer().transformedValue(tracker.schedule) as? NSObject
+            trackerCoreData.isPinned = tracker.isPinned
             return trackerCoreData
         })
         trackerCategoryCoreData.trackers = NSSet(array: mappedTrackers)
@@ -83,6 +84,7 @@ final class TrackerCategoryStore: NSObject {
         trackerCoreData.color = tracker.color
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.schedule = DaysValueTransformer().transformedValue(tracker.schedule) as? NSObject
+        trackerCoreData.isPinned = tracker.isPinned
         if let categoryTrackers = categorytoUpdate.trackers?.adding(trackerCoreData) {
             categorytoUpdate.trackers = categoryTrackers as NSSet
         }
@@ -102,7 +104,8 @@ final class TrackerCategoryStore: NSObject {
                     title: trackerCoreData.title ?? String(),
                     color: trackerCoreData.color as? UIColor ?? UIColor(resource: .trackerRed),
                     emoji: trackerCoreData.emoji ?? String(),
-                    schedule: DaysValueTransformer().reverseTransformedValue(trackerCoreData.schedule) as? [Weekday] ?? []
+                    schedule: DaysValueTransformer().reverseTransformedValue(trackerCoreData.schedule) as? [Weekday] ?? [],
+                    isPinned: trackerCoreData.isPinned
             )
         }
         return TrackerCategory(title: title, trackers: trackersResult)

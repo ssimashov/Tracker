@@ -41,24 +41,14 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     var checkCounter: Int = 0 {
         didSet {
-            var suffix = String()
-            if checkCounter >= 11 && checkCounter < 14 {
-                suffix = "дней"
-            }
-            else if checkCounter % 10 == 1 {
-                suffix = "день"
-            }
-            else if checkCounter % 10 == 2 || checkCounter % 10 == 3 || checkCounter % 10 == 4 {
-                suffix = "дня"
-            }
-            else {
-                suffix = "дней"
-            }
-            completeCounterLabel.text = "\(checkCounter) \(suffix)"
+            
+            let formatString: String = NSLocalizedString("numberOfDays", comment: "")
+            let resultString: String = String.localizedStringWithFormat(formatString, checkCounter)
+            completeCounterLabel.text = resultString
         }
     }
     
-    private lazy var cardView = UIView()
+    lazy var cardView = UIView()
     private lazy var trakerTitleLabel =  UILabel()
     private lazy var emojiLabel = UILabel()
     private lazy var completeCounterLabel = UILabel()

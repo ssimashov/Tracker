@@ -44,6 +44,7 @@ final class TrackerTypeSelectionViewController: UIViewController {
         habitButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         habitButton.addTarget(self, action: #selector(didTapHabitButton), for: .touchUpInside)
         
+        nonregularEventButton.setTitleColor(.trackerWhite, for: .normal)
         nonregularEventButton.setTitle(TrackerType.nonregular.title, for: .normal)
         nonregularEventButton.backgroundColor = .trackerBlack
         nonregularEventButton.layer.cornerRadius = 16.0

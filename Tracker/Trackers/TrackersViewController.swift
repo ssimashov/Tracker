@@ -104,6 +104,7 @@ final class TrackersViewController: UIViewController {
         updatePlaceHolderViewVisibility()
     }
     
+    
     private func setupNavigationItem() {
         navigationItem.title = NSLocalizedString("trackers", comment: "")
         navigationItem.searchController = searchController
@@ -413,5 +414,61 @@ extension TrackersViewController: TrackerCategoryStoreDelegate {
         updateFilters(date: currentDate, searchText: searchController.searchBar.text ?? "")
         updatePlaceHolderViewVisibility()
         trackersCollectionView.reloadData()
+    }
+}
+
+extension TrackersViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+          guard let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell else {
+              return nil
+          }
+          
+          let topContainerFrame = cell.convert(cell.cardView.frame, to: collectionView)
+          guard topContainerFrame.contains(point) else {
+              return nil
+          }
+          
+          return UIContextMenuConfiguration(
+              identifier: "\(indexPath.section)-\(indexPath.item)" as NSString,
+              previewProvider: nil
+          ) { _ in
+              let tracker = self.filteredCategories[indexPath.section].trackers[indexPath.item]
+              return self.makeContextMenu(for: tracker)
+          }
+      }
+    
+    private func makeContextMenu(for tracker: Tracker) -> UIMenu {
+        let pinAction = UIAction(
+            title: tracker.isPinned ? "Открепить" : "Закрепить"
+        ) { _ in
+            self.togglePin(for: tracker)
+        }
+        let editAction = UIAction(
+            title: "Редактировать"
+        ) { _ in
+            self.editTracker(tracker)
+        }
+        
+        let deleteAction = UIAction(
+            title: "Удалить",
+            attributes: .destructive
+        ) { _ in
+            self.deleteTracker(tracker)
+        }
+        
+        return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
+    }
+    
+    private func togglePin(for tracker: Tracker) {
+        
+    }
+    
+    private func editTracker(_ tracker: Tracker) {
+
+    }
+    
+    private func deleteTracker(_ tracker: Tracker) {
+
     }
 }

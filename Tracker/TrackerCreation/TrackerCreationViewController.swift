@@ -310,7 +310,8 @@ final class TrackerCreationViewController: UIViewController {
                                             title: title,
                                             color: UIColor(rgb: cardColors[pickedColorIndex]),
                                             emoji: emojis[pickedEmojiIndex],
-                                            schedule: schedule),
+                                            schedule: schedule,
+                                            isPinned: false),
                                     trackerCategory)
         }
         navigationController?.dismiss(animated: false)
