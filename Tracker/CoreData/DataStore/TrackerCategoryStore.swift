@@ -5,42 +5,24 @@
 //  Created by Sergey Simashov on 05.01.2025.
 //
 
-import UIKit
 import CoreData
-
-enum TrackerCategoryStoreError: Error {
-    case decodingErrorInvalidTitle
-    case decodingErrorInvalidTrackers
-}
-
-protocol TrackerCategoryStoreDelegate: AnyObject {
-    func storeDidUpdate(_ store: TrackerCategoryStore)
-}
 
 final class TrackerCategoryStore: NSObject {
     
-    private let context: NSManagedObjectContext
-    
-    weak var delegate: TrackerCategoryStoreDelegate?
-    
-    var categories: [TrackerCategory] {
-        guard
-            let objects = self.fetchedResultsController?.fetchedObjects,
-            let categories = try? objects.map({ try self.fetchTrackerCategory(from: $0) })
-        else { return [] }
-        return categories
+    var numberOfSections: Int {
+        fetchedResultsController.sections?.count ?? 0
     }
     
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
+    private enum TrackerCategoryStoreError: Error {
+        case decodingError
+    }
     
-    init(context: NSManagedObjectContext) {
-        self.context = context
-        super.init()
-        
-        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
-        fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerCategoryCoreData.title, ascending: true)
-        ]
+    private let context: NSManagedObjectContext
+    private let trackerStore = TrackerStore()
+    
+    private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData> = {
+        let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.title, ascending: true)]
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
@@ -48,74 +30,101 @@ final class TrackerCategoryStore: NSObject {
             cacheName: nil
         )
         controller.delegate = self
-        
         self.fetchedResultsController = controller
-        do {
-            try controller.performFetch()
-        } catch let error {
-            print("Can't fetch objects from db: \(error)")
+        try? controller.performFetch()
+        return controller
+    }()
+    
+    convenience override init() {
+        let context = DataBaseService.shared.context
+        self.init(context: context)
+    }
+    
+    init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+    
+  
+    func addCategory(_ category: TrackerCategory) {
+        let trackerCategory = TrackerCategoryCoreData(context: context)
+        guard let categoryFetch = fetchedResultsController.fetchedObjects else {
+            return
         }
         
+        guard !categoryFetch.contains(where: { $0.title == category.title }) else {
+            return
+        }
+        
+        trackerCategory.title = category.title
+        trackerCategory.trackers = []
+        
+        DataBaseService.shared.saveContext()
     }
     
-    func addNewTrackerCategory(_ trackerCategory: TrackerCategory) throws {
-        let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
-        trackerCategoryCoreData.title = trackerCategory.title
-        let mappedTrackers: [TrackerCoreData] = trackerCategory.trackers.map({ tracker in
-            let trackerCoreData = TrackerCoreData(context: context)
-            trackerCoreData.id = tracker.id
-            trackerCoreData.title = tracker.title
-            trackerCoreData.color = tracker.color
-            trackerCoreData.emoji = tracker.emoji
-            trackerCoreData.schedule = DaysValueTransformer().transformedValue(tracker.schedule) as? NSObject
-            trackerCoreData.isPinned = tracker.isPinned
-            return trackerCoreData
-        })
-        trackerCategoryCoreData.trackers = NSSet(array: mappedTrackers)
-        try context.save()
+    func fetchCategories() throws -> [TrackerCategory] {
+        guard let object = fetchedResultsController.fetchedObjects,
+              let categories = try? object.map({ try getCategory(from: $0)})
+        else {
+            return []
+        }
+        return categories
     }
     
-    func updateExistCategory(trackerCategoryTitle: String, tracker: Tracker) throws {
-        let objects = self.fetchedResultsController?.fetchedObjects
-        guard let categorytoUpdate = objects?.first(where: {$0.title == trackerCategoryTitle}) else { return }
-        let trackerCoreData = TrackerCoreData(context: context)
-        trackerCoreData.id = tracker.id
-        trackerCoreData.title = tracker.title
-        trackerCoreData.color = tracker.color
-        trackerCoreData.emoji = tracker.emoji
-        trackerCoreData.schedule = DaysValueTransformer().transformedValue(tracker.schedule) as? NSObject
-        trackerCoreData.isPinned = tracker.isPinned
-        if let categoryTrackers = categorytoUpdate.trackers?.adding(trackerCoreData) {
-            categorytoUpdate.trackers = categoryTrackers as NSSet
-        }
-        try context.save()
+    func addTrackerToCategory(_ tracker: Tracker, category title: String) {
+        let tracker = trackerStore.addTracker(tracker)
+        let category = fetchedResultsController.fetchedObjects?.first(where: {$0.title == title} )
+        category?.addToTrackers(tracker)
+        DataBaseService.shared.saveContext()
     }
     
-    private func fetchTrackerCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
-        guard let title = trackerCategoryCoreData.title else {
-            throw TrackerCategoryStoreError.decodingErrorInvalidTitle
+    func deleteTrackerFromCategory(_ tracker: Tracker)  {
+        trackerStore.deleteTracker(tracker: tracker)
+        DataBaseService.shared.saveContext()
+    }
+    
+    func deleteCategory(_ title: String) {
+        guard let fetchCategory = fetchedResultsController.fetchedObjects?.first(where: {$0.title == title}) else {
+            return
         }
-        guard let trackers = trackerCategoryCoreData.trackers else {
-            throw TrackerCategoryStoreError.decodingErrorInvalidTrackers
+        context.delete(fetchCategory)
+        DataBaseService.shared.saveContext()
+    }
+    
+    func updateCategory(_ title: String, newTitle: String) {
+        let fetchedCategories = fetchedResultsController.fetchedObjects
+        guard let fetchCategory = fetchedCategories?.first(where: {$0.title == title}) else {
+            return
         }
-        let trackersArray: [TrackerCoreData] = trackers.allObjects as? [TrackerCoreData] ?? []
-        let trackersResult = trackersArray.map { trackerCoreData in
-            Tracker(id: trackerCoreData.id ?? UUID(),
-                    title: trackerCoreData.title ?? String(),
-                    color: trackerCoreData.color as? UIColor ?? UIColor(resource: .trackerRed),
-                    emoji: trackerCoreData.emoji ?? String(),
-                    schedule: DaysValueTransformer().reverseTransformedValue(trackerCoreData.schedule) as? [Weekday] ?? [],
-                    isPinned: trackerCoreData.isPinned
-            )
+        fetchCategory.title = newTitle
+        DataBaseService.shared.saveContext()
+    }
+   
+    private func getCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
+        guard let title = trackerCategoryCoreData.title,
+              let trackersFromCoreData = trackerCategoryCoreData.trackers else {
+            throw TrackerCategoryStoreError.decodingError
         }
-        return TrackerCategory(title: title, trackers: trackersResult)
+        
+        let trackers = try trackersFromCoreData.compactMap { tracker -> Tracker? in
+            guard let trackerCoreData = tracker as? TrackerCoreData else {
+                throw TrackerCategoryStoreError.decodingError
+            }
+            
+            do {
+                let tracker = try trackerStore.getTracker(from: trackerCoreData)
+                return tracker
+            } catch {
+                print("\(error.localizedDescription)")
+                return nil
+            }
+        }
+        
+        return TrackerCategory(title: title, trackers: trackers)
     }
     
 }
 
-
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.storeDidUpdate(self)
+   func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
     }
 }

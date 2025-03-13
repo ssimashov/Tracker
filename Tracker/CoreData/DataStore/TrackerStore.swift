@@ -5,34 +5,101 @@
 //  Created by Sergey Simashov on 05.01.2025.
 //
 
-import UIKit
 import CoreData
 
-final class TrackerStore: NSObject {
+
+final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
+    
+    private enum TrackerStoreError: Error {
+        case decodingError
+    }
     
     private let context: NSManagedObjectContext
+    private let colorMarshalling = UIColorMarshalling()
     
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
-    
-    init(context: NSManagedObjectContext) {
-        self.context = context
-        super.init()
-        
-        let fetchRequest = TrackerCoreData.fetchRequest()
-        fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
-        ]
+    private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
+        let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCoreData.title, ascending: true)]
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
-            sectionNameKeyPath: nil,
+            sectionNameKeyPath: #keyPath(TrackerCategoryCoreData.title),
             cacheName: nil
         )
+        controller.delegate = self
         self.fetchedResultsController = controller
-        do {
-            try controller.performFetch()
-        } catch let error {
-            print("Can't fetch objects from db: \(error)")
-        }
+        try? controller.performFetch()
+        return controller
+    }()
+
+    convenience override init() {
+        let context = DataBaseService.shared.context
+        self.init(context: context)
     }
+    
+    init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+
+    
+    func addTracker(_ tracker: Tracker) -> TrackerCoreData {
+        let trackerCoreData = TrackerCoreData(context: context)
+        trackerCoreData.title = tracker.title
+        trackerCoreData.id = tracker.id
+        trackerCoreData.color = colorMarshalling.hexString(from: tracker.color)
+        trackerCoreData.isHabit = tracker.isHabit
+        trackerCoreData.schedule = tracker.schedule as NSObject
+        trackerCoreData.emoji = tracker.emoji
+        trackerCoreData.isPinned = tracker.isPinned
+        DataBaseService.shared.saveContext()
+        return trackerCoreData
+    }
+    
+    func fetchTrackers() -> [Tracker] {
+        guard let object = fetchedResultsController.fetchedObjects,
+              let tracker = try? object.map ({ try getTracker(from: $0)})
+        else { return [] }
+        return tracker
+    }
+    
+    func getTracker(from trackerCoreData: TrackerCoreData) throws -> Tracker {
+        guard let id = trackerCoreData.id,
+              let title = trackerCoreData.title,
+              let color = trackerCoreData.color,
+              let emoji = trackerCoreData.emoji,
+              let schedule = trackerCoreData.schedule as? [WeekDay] else {
+            throw TrackerStoreError.decodingError
+        }
+        return Tracker(
+            id: id,
+            title: title,
+            color: colorMarshalling.color(from: color),
+            emoji: emoji,
+            schedule: schedule,
+            isHabit: trackerCoreData.isHabit,
+            isPinned: trackerCoreData.isPinned
+        )
+    }
+    
+    func updateTracker(tracker: Tracker) {
+        let fetchedTrackers = fetchedResultsController.fetchedObjects
+        guard let fetchedTracker = fetchedTrackers?.first(where: { $0.id == tracker.id }) else {
+            return
+        }
+        fetchedTracker.title = tracker.title
+        fetchedTracker.emoji = tracker.emoji
+        fetchedTracker.color = colorMarshalling.hexString(from: tracker.color)
+        fetchedTracker.schedule = tracker.schedule as NSObject
+        fetchedTracker.isPinned = tracker.isPinned
+        DataBaseService.shared.saveContext()
+    }
+    
+    
+    func deleteTracker(tracker: Tracker) {
+        guard let fetchTracker = fetchedResultsController.fetchedObjects?.first(where: {$0.id == tracker.id}) else {
+            return
+        }
+        context.delete(fetchTracker)
+    }
+    
 }

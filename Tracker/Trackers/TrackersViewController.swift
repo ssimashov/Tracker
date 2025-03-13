@@ -22,27 +22,27 @@ struct GeometricParams {
     }
 }
 
-enum Weekday: Int, CaseIterable, Codable {
-    case sunday
-    case monday
-    case tuesday
-    case wednesday
-    case thursday
-    case friday
-    case saturday
-    
-    var fullname: String {
-        var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "ru_RU")
-        return calendar.weekdaySymbols[self.rawValue].capitalized
-    }
-    
-    var shortname: String {
-        var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "ru_RU")
-        return calendar.shortWeekdaySymbols[self.rawValue].capitalized
-    }
-}
+//enum Weekday: Int, CaseIterable, Codable {
+//    case sunday
+//    case monday
+//    case tuesday
+//    case wednesday
+//    case thursday
+//    case friday
+//    case saturday
+//    
+//    var fullname: String {
+//        var calendar = Calendar.current
+//        calendar.locale = Locale(identifier: "ru_RU")
+//        return calendar.weekdaySymbols[self.rawValue].capitalized
+//    }
+//    
+//    var shortname: String {
+//        var calendar = Calendar.current
+//        calendar.locale = Locale(identifier: "ru_RU")
+//        return calendar.shortWeekdaySymbols[self.rawValue].capitalized
+//    }
+//}
 
 final class TrackersViewController: UIViewController {
     
@@ -104,6 +104,15 @@ final class TrackersViewController: UIViewController {
         updatePlaceHolderViewVisibility()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        AppMetricaService.trackerEvent(name: "openTrackers", params: ["event":"open", "screen":"Main"])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        AppMetricaService.trackerEvent(name: "closedTrackers", params: ["event":"closed", "screen":"Main"])
+    }
     
     private func setupNavigationItem() {
         navigationItem.title = NSLocalizedString("trackers", comment: "")
@@ -266,6 +275,7 @@ final class TrackersViewController: UIViewController {
     @objc
     private func didTapAddTrackerButton() {
         let trackerTypeSelectionViewController = TrackerTypeSelectionViewController()
+        AppMetricaService.trackerEvent(name: "addTrackerButtonTaped", params: ["event":"click", "screen":"Main", "item":"add_track"])
         trackerTypeSelectionViewController.delegate = self
         let addEventNavigationontroller = UINavigationController(rootViewController: trackerTypeSelectionViewController)
         navigationController?.present(addEventNavigationontroller, animated: true)

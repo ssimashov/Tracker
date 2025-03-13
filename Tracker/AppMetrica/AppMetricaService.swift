@@ -14,9 +14,9 @@ final class AppMetricaService {
         AppMetrica.activate(with: configuration)
     }
     
-    static func report(event: AppMetricaEvent, params : [AnyHashable : Any]) {
-        AppMetrica.reportEvent(name: event.rawValue, parameters: params, onFailure: { error in
+    static func trackerEvent(name: String, params : [AnyHashable : Any]) {
+        AppMetrica.reportEvent(name: name, parameters: params) { error in
             print("REPORT ERROR: %@", error.localizedDescription)
-        })
+        }
     }
 }

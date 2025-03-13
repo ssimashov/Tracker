@@ -5,73 +5,72 @@
 //  Created by Sergey Simashov on 05.01.2025.
 //
 
-import UIKit
 import CoreData
 
 
-enum TrackerRecordStoreError: Error {
-    case decodingErrorInvalidId
-    case decodingErrorInvalidDate
-}
-
-
-final class TrackerRecordStore: NSObject {
+final class TrackerRecordStore {
+    
+    private enum TrackerRecordStoreError: Error {
+        case decodingError
+    }
     
     private let context: NSManagedObjectContext
     
-    var completedTrackers: [TrackerRecord] {
-        guard
-            let objects = self.fetchedResultsController?.fetchedObjects,
-            let completedTrackers = try? objects.map({ try self.fetchTrackerRecord(from: $0) })
-        else { return [] }
-        return completedTrackers
+    convenience init() {
+        let context = DataBaseService.shared.context
+        self.init(context: context)
     }
-    
-    private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>?
     
     init(context: NSManagedObjectContext) {
         self.context = context
-        super.init()
+    }
+    
+    func addRecord(_ record: TrackerRecord) {
+        let trackerRecord = TrackerRecordCoreData(context: context)
+        trackerRecord.date = record.date
+        trackerRecord.id = record.id
+        DataBaseService.shared.saveContext()
+    }
+    
+    func fetchRecords() -> Set<TrackerRecord> {
+        let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        let trackerRecordsFromCoreData = try? context.fetch(request)
+        guard let trackerRecordsFromCoreData else {
+            return Set()
+        }
+        let trackerRecords = try? trackerRecordsFromCoreData.map ({ try getRecord(from: $0) })
+        return Set(trackerRecords ?? [])
+    }
+    
+    func deleteRecord(_ record: TrackerRecord) {
+        let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        request.predicate = NSPredicate(format: "id == %@ AND date == %@", record.id as CVarArg, record.date as CVarArg)
+        let trackerRecordsFromCoreData = try? context.fetch(request)
+        if let recordForDelete = trackerRecordsFromCoreData?.first {
+            context.delete(recordForDelete)
+            DataBaseService.shared.saveContext()
+        }
+    }
+    
+    func deleteAllRecords(_ tracker: Tracker) {
+        let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+        let trackerRecordsFromCoreData = try? context.fetch(request)
+        if let recordForDelete = trackerRecordsFromCoreData?.first {
+            context.delete(recordForDelete)
+            DataBaseService.shared.saveContext()
+        }
+    }
+
+    
+    private func getRecord(from trackerRecordCoreData: TrackerRecordCoreData) throws -> TrackerRecord {
+        guard let id = trackerRecordCoreData.id,
+              let date = trackerRecordCoreData.date else {
+            throw TrackerRecordStoreError.decodingError
+        }
         
-        let fetchRequest = TrackerRecordCoreData.fetchRequest()
-        fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerRecordCoreData.id, ascending: true)
-        ]
-        let controller = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        self.fetchedResultsController = controller
-        do {
-            try controller.performFetch()
-        } catch let error {
-            print("Can't fetch objects from db: \(error)")
-        }
+        let trackerRecord = TrackerRecord(id: id, date: date)
+        return trackerRecord
     }
     
-    func addNewTrackerRecord(_ trackerRecord: TrackerRecord) throws {
-        let trackerRecordCoreData = TrackerRecordCoreData(context: context)
-        trackerRecordCoreData.id = trackerRecord.id
-        trackerRecordCoreData.date = trackerRecord.date
-        try context.save()
-    }
-    
-    func removeTrackerRecord(_ trackerRecord: TrackerRecord) throws {
-        let objects = self.fetchedResultsController?.fetchedObjects
-        guard let recordToDelete = objects?.first(where: {$0.id == trackerRecord.id && Calendar.current.isDate($0.date ?? Date(), inSameDayAs: trackerRecord.date)}) else { return }
-        context.delete(recordToDelete)
-        try context.save()
-    }
-    
-    private func fetchTrackerRecord(from trackerRecordCoreData: TrackerRecordCoreData) throws -> TrackerRecord {
-        guard let id = trackerRecordCoreData.id else {
-            throw TrackerRecordStoreError.decodingErrorInvalidId
-        }
-        guard let date = trackerRecordCoreData.date else {
-            throw TrackerRecordStoreError.decodingErrorInvalidDate
-        }
-        return TrackerRecord(id: id, date: date)
-    }
 }
